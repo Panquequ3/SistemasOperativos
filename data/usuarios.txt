@@ -1,2 +1,5 @@
 marta;12pancitos;Admin
-juan;123456789;Usuario General
+juan;123456789;Usuario
+luisveas;clave123456789;Admin
+MamaCoco;recuerdamehoymetengoqueirmiamorrecuerdame;Admin
+NigelMoon;tanquesovietico;Admin

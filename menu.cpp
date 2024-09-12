@@ -104,7 +104,7 @@ void seleccionMenu(string texto, vector<int> numeros, float numero,string userna
             do{
                 cout<<endl<<"Rol del usuario: ";
                 cin>>temp_rol;
-            }while(temp_rol!="Admin"||temp_rol!="Usuario General");
+            }while(!(temp_rol=="Admin" || temp_rol=="Usuario"));
             
             addUser(temp_usr,temp_psw,temp_rol);
         }

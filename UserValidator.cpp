@@ -185,7 +185,7 @@ void addUser(string user, string password, string rol){
     string path = dotenv::getenv(userpath.c_str());
     if (compruebaUsuario(user) && compruebaContrasena(password) && !encuentraUsuario(user)){
         ofstream file(path,ios::app);
-        file << user+";"+password+";"+rol<<endl;
+        file << endl << user+";"+password+";"+rol;
         file.close();
         cout<< "el usuario a sido agregado correctamente"<<endl;
     }
