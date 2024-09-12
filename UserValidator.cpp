@@ -146,11 +146,11 @@ bool encuentraUsuario(string user){
  * @return Un vector con los usuarios dentro de la "base de datos"
  */
 vector<string> getUsers(string exclude){
-    string userpath = "USERPATH";
+    string userpath = "USERSPATH";
     string path = dotenv::getenv(userpath.c_str());
     vector<string> users;
     ifstream file(path);
-    if(!file){
+    if(!file.is_open()){
         cout<<"Error al cargar el archivo!!"<<endl;
         exit(EXIT_FAILURE);
     }
@@ -181,7 +181,7 @@ vector<string> getUsers(string exclude){
  * @param rol Rol del usuario (Admin o Usuario General)
  */
 void addUser(string user, string password, string rol){
-    string userpath = "USERPATH";
+    string userpath = "USERSPATH";
     string path = dotenv::getenv(userpath.c_str());
     if (compruebaUsuario(user) && compruebaContrasena(password) && !encuentraUsuario(user)){
         ofstream file(path,ios::app);
@@ -200,7 +200,7 @@ void addUser(string user, string password, string rol){
  * @param user Nombre del usuario a eliminar
  */
 void deleteUser(string user){
-    string userpath = "USERPATH";
+    string userpath = "USERSPATH";
     string path = dotenv::getenv((userpath.c_str()));
     if(encuentraUsuario(user) && rolUser(user)!=2){
         vector<string> temp = getUsers(user);

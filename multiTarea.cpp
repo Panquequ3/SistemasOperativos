@@ -83,6 +83,7 @@ int main(int argc, char* argv[]) {
 		cout << "Recuerda, debe ejecutarse como: ./miPrograma -u user -p password -t text -v numbers -n number\n" << endl;
         exit(1);
     }
+    dotenv::init();
     int rol = validaUser(username,password);
     if(rol==0){
         cout<<"\nError, la contraseña o el usuario es incorrecto!"<<endl;
