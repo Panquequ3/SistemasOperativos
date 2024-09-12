@@ -92,8 +92,10 @@ int main(int argc, char* argv[]) {
     //------------------------------------------------------------------------
     // Imprimir resultados para verificación
     cout << "\n<>--------------------------------<>" << endl;
+    cout << "PID = " << getpid() << endl;
     cout << "LOS DATOS INGRESADOS FUERON: " << endl;
     cout << "Usuario: " << username << endl;
+    cout << "Rol: "<< ((rol==2)?"Admin":"Usuario General") << endl;
     cout << "Frase: " << frase << endl;
     cout << "Números: ";
     for (int num : numeros) {
