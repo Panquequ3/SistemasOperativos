@@ -4,9 +4,10 @@
 #include "funciones.h"//funciones necesarias para el menu y otras
 #include "menuContador.h" //para el programa contador de palabras
 #include "menu.h"
+#include "userValidator.h" //para las cosas del usuarios
 #include <string>
+#include <unistd.h>   // getpid()
 #include <unistd.h>   // Para fork()
-#include <sys/wait.h> // Para wait()
 
 
 using namespace std;
@@ -17,15 +18,21 @@ using namespace std;
  * @brief Funcion que imprime el menu
  * 
  */
-void imprimeMenu(){
+void imprimeMenu(int rol){
+    
     cout << "\n  <<--------MENU-------->>" << endl;
+    cout << "0) salir" << endl;
     cout << "1) detección de palíndromos" << endl;
     cout << "2) contar vocales" << endl;
     cout << "3) cantidad de letras en un texto" << endl;
     cout << "4) promedio y sumatoria de un vector" << endl;
     cout << "5) calcular f(x)=5x*x+1/x" << endl;
     cout << "6) programa contador de palabras" << endl;
-    cout << "7) salir" << endl;
+    if(rol==2){
+        cout << "7) Añadir un usuario" << endl;
+        cout << "8) Lista de usuarios" << endl;
+        cout << "9) Elimianr un usuario" << endl;
+    }
     cout << "  <<-------------------->>\n" << endl;
 }
 
@@ -40,24 +47,24 @@ void imprimeMenu(){
  * @param numero parametro a utilizar en la opcion (5)
  * 
  */
-void seleccionMenu(string texto, vector<int> numeros, float numero){
+void seleccionMenu(string texto, vector<int> numeros, float numero,string username, int rol){
 
-    imprimeMenu();
-
+    imprimeMenu(rol);
+    int moreoptions = (rol==2)? 3 : 0 ;
     int opcion;
     cout << "¡bienvenido! seleccione la opción deseada: ";
     cin >> opcion;
 
-    while (opcion != 7){
+    while (opcion != 0){
         //.fail() capta si hay algun ingreso que genere error, en este caso que se ingrese algo que no es un numero
         //esta entrada fallida queda en un buffer
-        while (cin.fail() || opcion < 1 || opcion > 7) { 
+        while (cin.fail() || opcion < 0 || opcion > 6+moreoptions) { 
             cin.clear(); // Limpiar el estado de error del ingreso (reestablece el estado de cin)
             cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Ignora la entrada no válida (descarta lo que hay en el buffer)
             cout << "La opción ingresada no existe, por favor escoja una opción válida: ";
             cin >> opcion;
         }
-        if(opcion == 7) break;
+        if(opcion == 0) break;
 
         //opciones validas
         if(opcion == 1){
@@ -85,8 +92,32 @@ void seleccionMenu(string texto, vector<int> numeros, float numero){
 
             // Ejecutar el programa después de que se haya compilado
             system("./mainContador");
-            imprimeMenu();
+            imprimeMenu(rol);
+        }
+        if(opcion == 7){
+            string temp_usr = "",temp_psw,temp_rol;
+            cout<<endl<<"Nombre de usuario: ";
+            cin >> temp_usr;
+            cout << endl << "Contraseña: ";
+            cin>>temp_psw;
 
+            do{
+                cout<<endl<<"Rol del usuario: ";
+                cin>>temp_rol;
+            }while(temp_rol!="Admin"||temp_rol!="Usuario General");
+            
+            addUser(temp_usr,temp_psw,temp_rol);
+        }
+        if(opcion == 8){
+            showUser();
+        }
+        if(opcion == 9){
+            string temp_usr = "";
+            do{
+                cout<<endl<<"Ingrese usuario a eliminar: ";
+                cin>> temp_usr;
+            }while(username==temp_usr);
+            deleteUser(temp_usr);
         }
         cout << "\n¿Desea realizar otra acción? porfavor escoja una opción: ";
         cin >> opcion;

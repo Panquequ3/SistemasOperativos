@@ -9,6 +9,7 @@
 #include <exception> //para las excepciones
 #include <laserpants/dotenv/dotenv.h> //para las variables de entorno .env
 #include <iostream>
+#include <cstdlib>
 using namespace std;
 
 
@@ -20,7 +21,7 @@ int main(int argc, char* argv[]) {
     int opt;
     float numero;
     bool isUser = false, isPass = false, isFrase = false, isNum = false, isN = false;
-
+    
 
     //leyendo los argumentos del programa, si alguno no fue proporcionado, el programa se cerrará
     while ((opt = getopt(argc, argv, "u:p:t:v:n:")) != -1) {
@@ -82,7 +83,11 @@ int main(int argc, char* argv[]) {
 		cout << "Recuerda, debe ejecutarse como: ./miPrograma -u user -p password -t text -v numbers -n number\n" << endl;
         exit(1);
     }
-    compruebaDatos(username, password);
+    int rol = validaUser(username,password);
+    if(rol==0){
+        cout<<"\nError, la contraseña o el usuario es incorrecto!"<<endl;
+        exit(EXIT_FAILURE);
+    }
     
     //------------------------------------------------------------------------
     // Imprimir resultados para verificación
@@ -97,7 +102,7 @@ int main(int argc, char* argv[]) {
     cout << endl;
     cout << "Número: " << numero << endl;
     cout << "<>---------------------------------<>\n" << endl;
-    seleccionMenu(frase, numeros, numero);
+    seleccionMenu(frase, numeros, numero,username,rol);
 
     return 0;
 }

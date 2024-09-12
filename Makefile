@@ -1,5 +1,5 @@
 CC=g++
-CFLAGS=-Wall -std=c++17 -Idotenv-cpp/include
+CFLAGS=-Wall -std=c++17 -Iexternals/dotenv-cpp/include
 BINS=multiTarea
 all: clean programa
 
