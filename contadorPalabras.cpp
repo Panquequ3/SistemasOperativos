@@ -14,7 +14,7 @@ void procesa(string carpetaP, string carpetaR, string extension) {
     //obs: "auto" te permite declarar variables sin especificar explícitamente su tipo
     for (const auto& entrada : filesystem::directory_iterator(carpetaP)) {
         if (entrada.path().extension() == extension) {
-            cout << "Nombre del archivo: " << entrada.path().filename() << endl;
+            //cout << "Nombre del archivo: " << entrada.path().filename() << endl;
 
             ifstream archivoEntrada(entrada.path());  // Abre el archivo para procesarlo
 
@@ -33,11 +33,11 @@ void procesa(string carpetaP, string carpetaR, string extension) {
                     // Si ya existe, se incrementa su contador
                 }
             }
-            cout << entrada.path().filename() << ", " << contadorPalabras.size() << " palabras distintas" << endl;
+            cout << entrada.path() << ", " << contadorPalabras.size() << " palabras distintas" << endl;
             archivoEntrada.close();
 
             //ahora escribiremos los resultados en un archivo creado en otra carpeta
-            ofstream archivoSalida(carpetaR + "/" + entrada.path().stem().string() + "Re" + extension);
+            ofstream archivoSalida(carpetaR + "/" + entrada.path().filename().string());
             
             if (!archivoSalida) {
                 cerr << "No se pudo crear el archivo de salida." << endl;

@@ -79,35 +79,13 @@ void seleccionMenu(string texto, vector<int> numeros, float numero){
             f(numero);
             }
         if(opcion == 6){
-            pid_t pid = fork(); // Crea un nuevo proceso
+            // Llamar a make para compilar programa cuenta palabras
+            system("make -f MakefileC");
+            system("clear");
 
-            if (pid < 0) {
-                // Error al crear el proceso hijo
-                std::cerr << "Error al crear el proceso hijo" << endl;
-                return;
-            }
-            else if (pid == 0) {
-                system("clear");
-                // Este es el proceso hijo
-                cout << "\nPROGRAMA CONTADOR DE PALABRAS" << endl;
-                cout << "##################################\n" << endl;
-                cout << "PID: " << getpid() << endl;
-                seleccionMenuCont(); // El hijo llama a una función propia
-                return; // Termina el proceso hijo
-            }
-            else {
-                // Este es el proceso padre
-                int status;
-                wait(&status); // Espera a que el hijo termine
-                /*if (WIFEXITED(status)) {
-                    cout << "El proceso hijo terminó con éxito." << endl;
-                } else {
-                    cerr << "El proceso hijo terminó con error." << endl;
-                }*/
-                
-                imprimeMenu();
-
-            }
+            // Ejecutar el programa después de que se haya compilado
+            system("./mainContador");
+            imprimeMenu();
 
         }
         cout << "\n¿Desea realizar otra acción? porfavor escoja una opción: ";
