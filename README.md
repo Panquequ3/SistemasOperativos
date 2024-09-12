@@ -31,13 +31,13 @@ palabra palíndromo, hasta evaluar un número en una función específica, esta 
 
 ## Funciones
 * En esta sección se detallan las funciones que posee el programa y ejemplos de ejecución de estas.
-*
+
 * Este programa cuenta con las siguientes funcionalidades:
-*
-* Detección de Palíndromos: Identifica si una palabra o frase es un palíndromo.
-* Contar Vocales: Calcula el número de vocales en un texto dado.
-* Contar Letras: Determina la cantidad de letras en una frase.
-* Promedio y Sumatoria: Calcula el promedio y la sumatoria de un vector de números.
-* Evaluación de Función: Calcula el valor de una función matemática dada.
-* Verificación de Usuario: Comprueba la validez del usuario y la contraseña.
-* También cuenta con verificación de usuarios.
+
+  * Detección de Palíndromos: Identifica si una palabra o frase es un palíndromo.
+  * Contar Vocales: Calcula el número de vocales en un texto dado.
+  * Contar Letras: Determina la cantidad de letras en una frase.
+  * Promedio y Sumatoria: Calcula el promedio y la sumatoria de un vector de números.
+  * Evaluación de Función: Calcula el valor de una función matemática dada.
+  * Verificación de Usuario: Comprueba la validez del usuario y la contraseña.
+  * También cuenta con verificación de usuarios.
