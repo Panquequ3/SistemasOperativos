@@ -4,7 +4,7 @@ BINS=multiTarea
 all: clean programa
 
 programa:
-	$(CC) $(CFLAGS) -o multiTarea multiTarea.cpp funciones.cpp menu.cpp userValidator.cpp
+	$(CC) $(CFLAGS) -o multiTarea multiTarea.cpp funciones.cpp menu.cpp userValidator.cpp contadorPalabras.cpp menuContador.cpp
 
 clean:
 	@echo " [CLN] Removing binary files... chao!!"

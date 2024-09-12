@@ -2,8 +2,13 @@
 #include <vector>     // Para vector
 #include <limits>     //para ver un ingreso incorrecto en un cin
 #include "funciones.h"//funciones necesarias para el menu y otras
+#include "menuContador.h" //para el programa contador de palabras
 #include "menu.h"
 #include <string>
+#include <unistd.h>   // Para fork()
+#include <sys/wait.h> // Para wait()
+
+
 using namespace std;
 
 
@@ -19,7 +24,8 @@ void imprimeMenu(){
     cout << "3) cantidad de letras en un texto" << endl;
     cout << "4) promedio y sumatoria de un vector" << endl;
     cout << "5) calcular f(x)=5x*x+1/x" << endl;
-    cout << "6) salir" << endl;
+    cout << "6) programa contador de palabras" << endl;
+    cout << "7) salir" << endl;
     cout << "  <<-------------------->>\n" << endl;
 }
 
@@ -42,15 +48,16 @@ void seleccionMenu(string texto, vector<int> numeros, float numero){
     cout << "¡bienvenido! seleccione la opción deseada: ";
     cin >> opcion;
 
-    while (opcion != 6){
-        //capta si hay algun ingreso que genere error
-        while (cin.fail() || opcion < 1 || opcion > 6) { 
-            cin.clear(); // Limpiar el estado de error del ingreso
-            cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Ignora la entrada no válida
+    while (opcion != 7){
+        //.fail() capta si hay algun ingreso que genere error, en este caso que se ingrese algo que no es un numero
+        //esta entrada fallida queda en un buffer
+        while (cin.fail() || opcion < 1 || opcion > 7) { 
+            cin.clear(); // Limpiar el estado de error del ingreso (reestablece el estado de cin)
+            cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Ignora la entrada no válida (descarta lo que hay en el buffer)
             cout << "La opción ingresada no existe, por favor escoja una opción válida: ";
             cin >> opcion;
         }
-        if(opcion == 6) break;
+        if(opcion == 7) break;
 
         //opciones validas
         if(opcion == 1){
@@ -58,7 +65,7 @@ void seleccionMenu(string texto, vector<int> numeros, float numero){
                 cout << texto << " es palindrome! " << endl; 
             else 
                 cout << texto << " no es palindrome.." << endl; 
-            }   
+        }   
         if(opcion == 2)
             cout << "La cantidad de vocales en el texto ingresado es : " << cuentaVocal(texto) << endl;
         if(opcion == 3)
@@ -71,6 +78,38 @@ void seleccionMenu(string texto, vector<int> numeros, float numero){
             cout << "El resultado de f(" << numero << ") es :" << endl;
             f(numero);
             }
+        if(opcion == 6){
+            pid_t pid = fork(); // Crea un nuevo proceso
+
+            if (pid < 0) {
+                // Error al crear el proceso hijo
+                std::cerr << "Error al crear el proceso hijo" << endl;
+                return;
+            }
+            else if (pid == 0) {
+                system("clear");
+                // Este es el proceso hijo
+                cout << "\nPROGRAMA CONTADOR DE PALABRAS" << endl;
+                cout << "##################################\n" << endl;
+                cout << "PID: " << getpid() << endl;
+                seleccionMenuCont(); // El hijo llama a una función propia
+                return; // Termina el proceso hijo
+            }
+            else {
+                // Este es el proceso padre
+                int status;
+                wait(&status); // Espera a que el hijo termine
+                /*if (WIFEXITED(status)) {
+                    cout << "El proceso hijo terminó con éxito." << endl;
+                } else {
+                    cerr << "El proceso hijo terminó con error." << endl;
+                }*/
+                
+                imprimeMenu();
+
+            }
+
+        }
         cout << "\n¿Desea realizar otra acción? porfavor escoja una opción: ";
         cin >> opcion;
     }
