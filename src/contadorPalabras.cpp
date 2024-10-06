@@ -37,7 +37,7 @@ void procesa(string carpetaP, string carpetaR, string extension) {
             archivoEntrada.close();
 
             //ahora escribiremos los resultados en un archivo creado en otra carpeta
-            ofstream archivoSalida(carpetaR + "/" + entrada.path().filename().string()+".txt");
+            ofstream archivoSalida(carpetaR + "/" + entrada.path().stem().string()+".txt");
             
             if (!archivoSalida) {
                 cerr << "No se pudo crear el archivo de salida." << endl;

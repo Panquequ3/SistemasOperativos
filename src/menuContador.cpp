@@ -42,7 +42,7 @@ void seleccionMenuCont(){
     cout << "¡bienvenido al contador! seleccione la opción deseada: ";
     cin >> opcion;
 
-    while (opcion != 0){
+    while (true){
         //.fail() capta si hay algun ingreso que genere error, en este caso que se ingrese algo que no es un numero
         //esta entrada fallida queda en un buffer
         while (cin.fail() || opcion < 0 || opcion > 4) { 
@@ -51,44 +51,41 @@ void seleccionMenuCont(){
             cout << "La opción ingresada no existe, por favor escoja una opción válida: ";
             cin >> opcion;
         }
+        if(opcion == 0) break;
 
-        switch (opcion){            
-            case 0:
-                break;
-            case 1:
+        if(opcion == 1){
                 cout << "Ingrese la extension de los archivos a procesar : ";
                 cin >> extension;
                 if (extension != "") isExt = true;
-                break;
-            case 2:
-                cout << "Ingrese el path de la carpeta a procesar : ";
-                cin >> carpetaP;
-                //Comprobamos que el path exista, y que sea una carpeta
-                if (filesystem::exists(carpetaP) && filesystem::is_directory(carpetaP)) isP = true;
-                else cout << "por favor, ingrese una carpeta existente";
-
-                break;
-            case 3:
-                cout << "Ingrese el path de la carpeta que contendrá el resultado : ";
-                cin >> carpetaR;  
-                //Comprobamos que el path exista, y que sea una carpeta
-                if (filesystem::exists(carpetaR) && filesystem::is_directory(carpetaR)) isR = true;
-                else cout << "por favor, ingrese una carpeta existente";
-
-                break;
-            case 4:
-                cout << "procesando.. " << endl;
-                //si fueron ingresados todos los datos necesarios, procesamos
-                if(isExt && isP && isR) 
-                    procesa(carpetaP, carpetaR, extension);
-                else{
-                    if(!isExt) cout << "Falta ingresar la extensión de los archivos" << endl;
-                    if(!isR) cout << "Falta ingresar la carpeta donde se ubican los archivos a procesar" << endl;
-                    if(!isP) cout << "Falta ingresar la carpeta donde se ubicara el resultado" << endl;
-                    cout << "vuelva a intentarlo" << endl;
-                }
-                break;
+        }   
+        if(opcion == 2){
+            cout << "Ingrese el path de la carpeta a procesar : ";
+            cin >> carpetaP;
+            //Comprobamos que el path exista, y que sea una carpeta
+            if (filesystem::exists(carpetaP) && filesystem::is_directory(carpetaP)) isP = true;
+            else cout << "por favor, ingrese una carpeta existente";
         }
+        if(opcion == 3){
+            cout << "Ingrese el path de la carpeta que contendrá el resultado : ";
+            cin >> carpetaR;  
+            //Comprobamos que el path exista, y que sea una carpeta
+            if (filesystem::exists(carpetaR) && filesystem::is_directory(carpetaR)) isR = true;
+            else cout << "por favor, ingrese una carpeta existente";
+
+        }
+        if(opcion == 4){
+            cout << "procesando.. " << endl;
+            //si fueron ingresados todos los datos necesarios, procesamos
+            if(isExt && isP && isR) 
+                procesa(carpetaP, carpetaR, extension);
+            else{
+                if(!isExt) cout << "Falta ingresar la extensión de los archivos" << endl;
+                if(!isR) cout << "Falta ingresar la carpeta donde se ubican los archivos a procesar" << endl;
+                if(!isP) cout << "Falta ingresar la carpeta donde se ubicara el resultado" << endl;
+                cout << "vuelva a intentarlo" << endl;
+                }
+            }        
+
         cout << "\n¿Desea realizar otra acción? porfavor escoja una opción: ";
         cin >> opcion;
     }

@@ -11,13 +11,14 @@ palabra palíndromo, hasta evaluar un número en una función específica, esta 
 * Para la lectura de archivos .env se descargó la librería dotenv-cpp, el cual debe ser añadido a la carpeta junto con el programa.
 
 ## Instalacion / Compilacion
-* Para la instalación del programa hay que descargar los archivos funciones.(h/cpp), menu.(h/cpp), multitarea.cpp y el Makefile en la misma carpeta, y tambien clonar la libreria dotenv-cpp (https://github.com/laserpants/dotenv-cpp.git) y añadirla a la carpeta junto con el resto, de lo contrario el .env con las variables de entorno no podran ser leidas correctamente. Asegurate de mantener todos los archivos en la carpeta, en caso de no ejecutarse correctamente, verificar que la ubicación de cada archivo. 
-* para compilarlo abriremos el compilador y ejecutaremos el comando "make"
+* Para la instalación del programa basta con clonar el repositorio, y tambien clonar la libreria dotenv-cpp (https://github.com/laserpants/dotenv-cpp.git) y añadirla a la carpeta "external" junto con el resto, de lo contrario el .env con las variables de entorno no podran ser leidas correctamente. Asegurate de mantener todos los archivos en las carpetas correctas, en caso de no ejecutarse correctamente, verificar que la ubicación de cada archivo. 
+* importante mencionar que se deben compilar 2 programas previamente, el programa principal (con make) y el programa que ejecuta la opción (6) (con "make -f MakefileC")
 
 ## Ejecucion
 * En esta sección se detalla como ejecutar el programa junto con una descripción de los argumentos de lanzamiento.
 * posterior a la compilación, utilizaremos el comando  ./multiTarea -u nombre_usuario -p contraseña -t "frase" -v "n1;n2;..;nk" -n numero  para acceder al programa.
 * mencionar que el vector debe seguir la forma de: numero o numeroA;numeroB en caso de añadir más números.
+
 
 
 | Argumento | Descripcion                  |
@@ -40,4 +41,7 @@ palabra palíndromo, hasta evaluar un número en una función específica, esta 
   * Promedio y Sumatoria: Calcula el promedio y la sumatoria de un vector de números.
   * Evaluación de Función: Calcula el valor de una función matemática dada.
   * Verificación de Usuario: Comprueba la validez del usuario y la contraseña.
-  * También cuenta con verificación de usuarios.
+  * programa contador de palabras : llama a un programa externo que permite el conteo de palabras sobre archivos de una carpeta. Cuenta las palabras en los archivos de entrada, generando archivos de salida con los resultados.
+  * Añadir un usuario :
+  * Lista de usuarios :
+  * Eliminar un usuario :

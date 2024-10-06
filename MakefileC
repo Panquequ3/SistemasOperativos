@@ -1,10 +1,11 @@
 CC=g++
-CFLAGS=-Wall -std=c++17 
+CFLAGS=-Wall -std=c++17 -Isrc -Iinclude
 BINS=mainContador
+
 all: clean programa
 
 programa:
-	$(CC) $(CFLAGS) -o mainContador mainContador.cpp menuContador.cpp contadorPalabras.cpp
+	$(CC) $(CFLAGS) -o mainContador src/mainContador.cpp src/menuContador.cpp src/contadorPalabras.cpp
 
 clean:
 	@echo " [CLN] Removing binary files... chao!!"

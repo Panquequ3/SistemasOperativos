@@ -31,7 +31,7 @@ void imprimeMenu(int rol){
     if(rol==2){
         cout << "7) Añadir un usuario" << endl;
         cout << "8) Lista de usuarios" << endl;
-        cout << "9) Elimianr un usuario" << endl;
+        cout << "9) Eliminar un usuario" << endl;
     }
     cout << "  <<-------------------->>\n" << endl;
 }
@@ -51,14 +51,15 @@ void seleccionMenu(string texto, vector<int> numeros, float numero,string userna
 
     imprimeMenu(rol);
     int moreoptions = (rol==2)? 3 : 0 ;
+
     int opcion;
     cout << "¡bienvenido! seleccione la opción deseada: ";
     cin >> opcion;
 
-    while (opcion != 0){
+    while (true){
         //.fail() capta si hay algun ingreso que genere error, en este caso que se ingrese algo que no es un numero
         //esta entrada fallida queda en un buffer
-        while (cin.fail() || opcion < 0 || opcion > 6+moreoptions) { 
+        while (cin.fail() || opcion < 0 || (opcion > 6+moreoptions)) { 
             cin.clear(); // Limpiar el estado de error del ingreso (reestablece el estado de cin)
             cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Ignora la entrada no válida (descarta lo que hay en el buffer)
             cout << "La opción ingresada no existe, por favor escoja una opción válida: ";
@@ -87,7 +88,6 @@ void seleccionMenu(string texto, vector<int> numeros, float numero,string userna
             }
         if(opcion == 6){
             // Llamar a make para compilar programa cuenta palabras
-            system("make -f MakefileC");
             system("clear");
 
             // Ejecutar el programa después de que se haya compilado

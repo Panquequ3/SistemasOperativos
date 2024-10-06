@@ -1,10 +1,11 @@
 CC=g++
-CFLAGS=-Wall -std=c++17 -Iexternal/dotenv-cpp/include
+CFLAGS=-Wall -std=c++17 -Iexternal/dotenv-cpp/include -Isrc -Iinclude
 BINS=multiTarea
+
 all: clean programa
 
 programa:
-	$(CC) $(CFLAGS) -o multiTarea multiTarea.cpp funciones.cpp menu.cpp userValidator.cpp
+	$(CC) $(CFLAGS) -o multiTarea src/multiTarea.cpp src/funciones.cpp src/menu.cpp src/userValidator.cpp
 
 clean:
 	@echo " [CLN] Removing binary files... chao!!"

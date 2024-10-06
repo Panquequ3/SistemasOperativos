@@ -1,5 +1,6 @@
 marta;12pancitos;Admin
-juan;123456789;Usuario
 luisveas;clave123456789;Admin
 MamaCoco;recuerdamehoymetengoqueirmiamorrecuerdame;Admin
 NigelMoon;tanquesovietico;Admin
+pinocho;1234567890;Usuario
+kilombo;65656565;Admin
