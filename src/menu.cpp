@@ -28,10 +28,11 @@ void imprimeMenu(int rol){
     cout << "4) promedio y sumatoria de un vector" << endl;
     cout << "5) calcular f(x)=5x*x+1/x" << endl;
     cout << "6) programa contador de palabras" << endl;
+    cout << "7) conteo paralelo con threads" << endl;
     if(rol==2){
-        cout << "7) Añadir un usuario" << endl;
-        cout << "8) Lista de usuarios" << endl;
-        cout << "9) Eliminar un usuario" << endl;
+        cout << "8) Añadir un usuario" << endl;
+        cout << "9) Lista de usuarios" << endl;
+        cout << "10) Eliminar un usuario" << endl;
     }
     cout << "  <<-------------------->>\n" << endl;
 }
@@ -95,6 +96,9 @@ void seleccionMenu(string texto, vector<int> numeros, float numero,string userna
             imprimeMenu(rol);
         }
         if(opcion == 7){
+            
+        }
+        if(opcion == 8){
             string temp_usr = "",temp_psw,temp_rol;
             cout<<endl<<"Nombre de usuario: ";
             cin >> temp_usr;
@@ -108,10 +112,10 @@ void seleccionMenu(string texto, vector<int> numeros, float numero,string userna
             
             addUser(temp_usr,temp_psw,temp_rol);
         }
-        if(opcion == 8){
+        if(opcion == 9){
             showUser();
         }
-        if(opcion == 9){
+        if(opcion == 10){
             string temp_usr = "";
             do{
                 cout<<endl<<"Ingrese usuario a eliminar: ";
