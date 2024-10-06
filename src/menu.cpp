@@ -105,9 +105,10 @@ void seleccionMenu(string texto, vector<int> numeros, float numero,string userna
             cin >> temp_usr;
             cout << endl << "Contraseña: ";
             cin>>temp_psw;
-
+            cout<<endl<<"Rol del usuario(Admin o Usuario): ";
+            cin>>temp_rol;
             do{
-                cout<<endl<<"Rol del usuario(Admin o Usuario): ";
+                cout<<endl<<"El usuario debe ser Admin o Usuario"<<endl<<"Rol del usuario(Admin o Usuario): ";
                 cin>>temp_rol;
             }while(!(temp_rol=="Admin" || temp_rol=="Usuario"));
             

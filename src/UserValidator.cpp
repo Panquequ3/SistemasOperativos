@@ -1,6 +1,5 @@
 #include <iostream>
 #include <string>
-#include <vector>
 #include <utility> // Para cosas mias jijis uwu
 #include <map> // Para el HashMap
 #include <cstdlib>   // Para exit
@@ -59,7 +58,7 @@ int validateUser(string user, string password){
     map<string, pair<string,string>>users = getUsers("","USERSPATH");
     if(users.find(user)!=users.end()){
         if(users[user].second==password){
-            return (((users[user].first)!="Admin")?1:2);
+            return (users[user].first.compare("Admin")?2:1);
         }
     }
     return 0;
@@ -74,7 +73,7 @@ int validateUser(string user, string password){
  */
 int rolUser(string user){
     map<string,pair<string, string>>users=getUsers("","USERSPATH");
-    if(users.find(user)!=users.end()) return (users[user].first=="Admin"?2:1);
+    if(users.find(user)!=users.end()) return (users[user].first.compare("Admin")?2:1);
     return 0;
 }
 
@@ -117,7 +116,6 @@ map<string,pair<string,string>>getUsers(string exclude,string userpath){
         password = temp.substr(start,end-start);
         start = end+1;
         rol = temp.substr(start);
-        cout << name <<rol << endl;
         users[name] = make_pair(rol,password);
     }
     file.close();
