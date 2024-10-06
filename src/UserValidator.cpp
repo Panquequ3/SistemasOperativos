@@ -1,6 +1,8 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <utility> // Para cosas mias jijis uwu
+#include <map> // Para el HashMap
 #include <cstdlib>   // Para exit
 #include <laserpants/dotenv/dotenv.h> // Para las variables de entorno .env
 #include "userValidator.h"
@@ -53,32 +55,11 @@ bool compruebaContrasena(string pass){
  * @param password Clave del usuario
  * @return 0 si no es usuario, 1 si es un usuario normal y 2 si es admin
  */
-int validaUser(string user, string password){
-    size_t ini,fin;
-    string temp;
-    vector<string>users=getUsers("");
-    for(string i:users){
-        ini = fin = 0;
-        fin = i.find(";",ini);
-        temp = i.substr(ini,fin-ini);
-        if(temp==user){
-            ini=fin+1;
-            fin=i.find(";",ini);
-            if(fin == string::npos) continue;
-            temp = i.substr(ini,fin-ini);
-            if(temp==password){
-                ini=fin+1;
-                string rol = i.substr(ini);
-                if(rol.find("Admin")!=string::npos){
-                    return 2;
-                }
-                else{
-                    return 1;
-                }
-            }
-            else{
-                return 0;
-            }
+int validateUser(string user, string password){
+    map<string, pair<string,string>>users = getUsers("","USERSPATH");
+    if(users.find(user)!=users.end()){
+        if(users[user].second==password){
+            return (((users[user].first)!="Admin")?1:2);
         }
     }
     return 0;
@@ -92,28 +73,8 @@ int validaUser(string user, string password){
  * @return 0 si no es usuario, 1 si es un usuario normal y 2 si es admin
  */
 int rolUser(string user){
-    size_t ini,fin;
-    string temp;
-    vector<string>users=getUsers("");
-    for(string i:users){
-        ini = fin = 0;
-        fin = i.find(";",ini);
-        temp = i.substr(ini,fin-ini);
-        if(temp==user){
-            ini=fin+1;
-            fin=i.find(";",ini);
-            if(fin == string::npos) continue;
-            temp = i.substr(ini,fin-ini);
-            ini=fin+1;
-            string rol = i.substr(ini);
-            if(rol.find("Admin")!=string::npos){
-                return 2;
-            }
-            else{
-                return 1;
-            }
-        }
-    }
+    map<string,pair<string, string>>users=getUsers("","USERSPATH");
+    if(users.find(user)!=users.end()) return (users[user].first=="Admin"?2:1);
     return 0;
 }
 
@@ -123,54 +84,44 @@ int rolUser(string user){
  * @param user Usuario a buscar
  * @return verdadero si lo encontro, falso si no
  */
-bool encuentraUsuario(string user){
-    int ini = 0,fin;
-    int cont = 0;
-    string temp;
-    vector<string>users=getUsers("");
-    for(string i:users){
-        fin = i.find(";",ini);
-        temp = i.substr(ini,fin-ini);
-        cont++;
-        if(temp==user){
-            return true;
-        }
-    }
-    return false;
+bool findUser(string user){
+    map<string,pair<string,string>>users=getUsers("","USERSPATH");
+    return (users.find(user)!=users.end());
 }
 
 /**
  * @brief Consigue todos los usuarios y puede excluir a uno
  * @details Extrae todos los usuarios de la "base de datos" y puede no tomar uno
  * @param exclude Usuario excluido de la busqueda
+ * @param userpath Path de la informacion de los usuarios
  * @return Un vector con los usuarios dentro de la "base de datos"
  */
-vector<string> getUsers(string exclude){
-    string userpath = "USERSPATH";
+map<string,pair<string,string>>getUsers(string exclude,string userpath){
     string path = dotenv::getenv(userpath.c_str());
-    vector<string> users;
+    string name="", rol = "", password = "";
+    size_t start,end;
+    map<string,pair<string,string>> users;
     ifstream file(path);
     if(!file.is_open()){
         cout<<"Error al cargar el archivo!!"<<endl;
         exit(EXIT_FAILURE);
     }
     string temp;
-    if(exclude==""){
-        while(getline(file,temp)){
-            users.push_back(temp);
-        }
-        file.close();
-        return users;
+    while(getline(file,temp)){
+        start = end = 0;
+        end = temp.find(";",start);
+        name = temp.substr(start,end-start);
+        if(exclude!="" && name!= exclude) continue;
+        start = end+1;
+        end = temp.find(";",start);
+        password = temp.substr(start,end-start);
+        start = end+1;
+        rol = temp.substr(start);
+        cout << name <<rol << endl;
+        users[name] = make_pair(rol,password);
     }
-    else{
-        while(getline(file,temp)){
-            if(exclude!=temp.substr(0,temp.find(";"))){
-                users.push_back(temp);
-            }
-        }
-        file.close();
-        return users;
-    }
+    file.close();
+    return users;
 }
 
 /**
@@ -183,7 +134,7 @@ vector<string> getUsers(string exclude){
 void addUser(string user, string password, string rol){
     string userpath = "USERSPATH";
     string path = dotenv::getenv(userpath.c_str());
-    if (compruebaUsuario(user) && compruebaContrasena(password) && !encuentraUsuario(user)){
+    if (compruebaUsuario(user) && compruebaContrasena(password) && !findUser(user)){
         ofstream file(path,ios::app);
         file << endl << user+";"+password+";"+rol;
         file.close();
@@ -202,11 +153,11 @@ void addUser(string user, string password, string rol){
 void deleteUser(string user){
     string userpath = "USERSPATH";
     string path = dotenv::getenv((userpath.c_str()));
-    if(encuentraUsuario(user) && rolUser(user)!=2){
-        vector<string> temp = getUsers(user);
+    if(findUser(user) && rolUser(user)!=2){
+        map<string,pair<string,string>> temp = getUsers(user,"USERSPATH");
         ofstream file(path,ios::trunc);
-        for(string i:temp){
-            file << i << endl;
+        for(const auto& i:temp){
+            file << i.first << ";" << i.second.second << ";"<< i.second.first << endl;
         }
         file.close();
         cout<<"Usuario "<<user<<" Eliminado"<<endl;
@@ -219,19 +170,9 @@ void deleteUser(string user){
  * @brief Muestra a los usuarios con su rol
  */
 void showUser(){
-    size_t ini,fin;
-    string usr,rol;
-    vector<string>users=getUsers("");
+    map<string,pair<string,string>>users=getUsers("","USERSPATH");
     cout << "Usuarios ------ Rol"<<endl;
-    for(string i:users){
-        ini = fin = 0;
-        fin = i.find(";",ini);
-        
-        usr = i.substr(ini,fin-ini);
-        ini=fin+1;
-        fin=i.find(";",ini);
-        ini=fin+1;
-        rol = i.substr(ini);
-        cout<< usr << "   " << rol << endl;
+    for(const auto& i:users){
+        cout<< i.first << "   " << i.second.first << endl;
     }
 }
