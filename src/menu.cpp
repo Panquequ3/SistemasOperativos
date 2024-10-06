@@ -17,6 +17,7 @@ using namespace std;
 /**
  * @brief Funcion que imprime el menu
  * 
+ * @param rol El rol del usuario que añade mas opciones en caso de ser necesario
  */
 void imprimeMenu(int rol){
     
@@ -106,7 +107,7 @@ void seleccionMenu(string texto, vector<int> numeros, float numero,string userna
             cin>>temp_psw;
 
             do{
-                cout<<endl<<"Rol del usuario: ";
+                cout<<endl<<"Rol del usuario(Admin o Usuario): ";
                 cin>>temp_rol;
             }while(!(temp_rol=="Admin" || temp_rol=="Usuario"));
             

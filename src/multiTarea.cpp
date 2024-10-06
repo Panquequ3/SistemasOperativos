@@ -84,7 +84,7 @@ int main(int argc, char* argv[]) {
         exit(1);
     }
     dotenv::init();
-    int rol = validaUser(username,password);
+    int rol = validateUser(username,password);
     if(rol==0){
         cout<<"\nError, la contraseña o el usuario es incorrecto!"<<endl;
         exit(EXIT_FAILURE);
