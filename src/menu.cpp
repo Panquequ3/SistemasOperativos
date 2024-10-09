@@ -97,7 +97,7 @@ void seleccionMenu(string texto, vector<int> numeros, float numero,string userna
             imprimeMenu(rol);
         }
         if(opcion == 7){
-            
+            system("./paralelo 4 ./data/procesar ./data/resultados txt ./data/stop_word.txt temporal");
         }
         if(opcion == 8){
             string temp_usr = "",temp_psw,temp_rol;

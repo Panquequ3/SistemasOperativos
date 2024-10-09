@@ -1,0 +1,12 @@
+CC=g++
+CFLAGS=-Wall -std=c++17 -Isrc -Iinclude
+BINS=mainParalelo
+
+all: clean programa
+
+programa:
+	$(CC) $(CFLAGS) -o paralelo src/mainParalelo.cpp src/conteoParalelo.cpp
+
+clean:
+	@echo " [CLN] Removing binary files... chao!!"
+	@rm -f $(BINS)

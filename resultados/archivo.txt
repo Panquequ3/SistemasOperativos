@@ -1,8 +1,0 @@
-11; 2
-111; 1
-11111; 1
-de; 1
-ejemplo; 2
-hola; 2
-mundo; 3
-texto; 3
