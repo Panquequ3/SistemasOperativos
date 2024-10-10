@@ -1,8 +1,8 @@
 #include <iostream>
 #include <string>
-#include <utility> // Para cosas mias jijis uwu
-#include <map> // Para el HashMap
-#include <cstdlib>   // Para exit
+#include <utility> 
+#include <map>
+#include <cstdlib> 
 #include <laserpants/dotenv/dotenv.h> // Para las variables de entorno .env
 #include "userValidator.h"
 using namespace std;

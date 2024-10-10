@@ -1,11 +1,11 @@
 #include <iostream>
 #include <map>
-// #include <sstream> // Para istringstream
-// #include <filesystem> //para explorar archivos en una carpeta
+#include <fstream>
+#include <filesystem> //para explorar archivos en una carpeta
 
 using namespace std;
 
-map<string,string> indexCreator();
+void indexCreator(string process_path,string index_path);
 
 int main(int argc, char* argv[]){
     if(argc!=3){
@@ -14,41 +14,46 @@ int main(int argc, char* argv[]){
     }
     string index_path = argv[1];
     string process_path = argv[2];
+    indexCreator(process_path,index_path)
     return EXIT_SUCCESS;
 }
 
-map<string, string>indexCreator(){
-    map<string,string> pepe;
-    pepe["pablo"] = "peine";
-    return pepe;
+void indexCreator(string process_path,string index_path){
+    map<string,string> words;
+    size_t end;
+    string temp;
+    string word;
+    string cant;
+    string id;
+    for (const auto& input : filesystem::directory_iterator(process_path)) {
+        if (input.path().extension() == ".txt") {
+            ifstream inputFile(input.path());
+            if (!inputFile) { // Verifica si el archivo se abrió correctamente
+                cerr << "No se pudo abrir el archivo para lectura." << endl;
+                continue; 
+            }
+            id = input.path().stem().string();
+            while (getline(inputFile, temp)) {
+                //muere con palabras que sean del tipo asdas;;
+                end = 0;
+                end = temp.find(";");
+                word = temp.substr(0,end);
+                end++;
+                cant = temp.substr(end);
+                if(words.find(word)==words.end()){
+                    words[word] = "("+id+","+cant+");";
+                }
+                else{
+                    words[word] = words[word]+"("+id+","+cant+");";
+                }
+            }
+            inputFile.close();
+        }
+    }
+    ofstream file(index_path,ios::trunc);
+    for(const auto& i:words){
+        file << i.first << ";" << i.second << endl;
+    }
+    file.close();
+    return words;
 }
-
-// void procesa(string carpetaP, string carpetaR, string extension) {
-//     extension = "." + extension;
-//     // Itera a través de todos los archivos con en la carpeta indicada a procesar
-//     //obs: "auto" te permite declarar variables sin especificar explícitamente su tipo
-//     for (const auto& entrada : filesystem::directory_iterator(carpetaP)) {
-//         if (entrada.path().extension() == extension) {
-//             //cout << "Nombre del archivo: " << entrada.path().filename() << endl;
-
-//             ifstream archivoEntrada(entrada.path());  // Abre el archivo para procesarlo (lo abre modo lectura)
-
-//             if (!archivoEntrada) { // Verifica si el archivo se abrió correctamente
-//                 cerr << "No se pudo abrir el archivo para lectura." << endl;
-//                 continue; //instrucción de control de flujo en los bucles que sirve para saltarse el resto del código dentro del 
-//                         //bucle para la iteración actual y pasar inmediatamente a la siguiente iteración.
-//             }
-//             string linea;
-//             while (getline(archivoEntrada, linea)) { // Lee el archivo línea por línea
-//                 // Aqui puedes hacer lo que sea con la linea
-//                 istringstream stream(linea); // Convierte la línea en un stream para procesar palabra por palabra
-//                 string palabra;
-//                 while (stream >> palabra) { // Extrae cada palabra de la línea
-//                     //aqui puedes hacer algo con la palabra donde estas posicionado
-//                 }
-//             }
-//             archivoEntrada.close();
-
-//         }
-//     } 
-// }
