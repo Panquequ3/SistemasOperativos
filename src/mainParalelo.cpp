@@ -3,6 +3,7 @@
 using namespace std;
 
 int main(int argc, char* argv[]){
+    //En caso de reutilizarlo en otra parte
 	if(argc != 7){
 		cout << "Error. Debe ejecutarse como ./paralelo nHilos pathP pathR extension pathStopWord pathTemp" << endl;
 		exit(EXIT_FAILURE);

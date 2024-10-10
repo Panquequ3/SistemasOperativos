@@ -4,6 +4,7 @@
 #include <condition_variable> //proporciona una forma de manejar la sincronización entre hilos
 #include <queue>
 
+using namespace std;
 queue<int> taskQueue; // Cola de tareas
 mutex queueMutex;      // Mutex para proteger la cola
 condition_variable cv; // Variable de condición

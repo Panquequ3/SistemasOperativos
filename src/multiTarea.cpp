@@ -10,6 +10,17 @@
 #include <laserpants/dotenv/dotenv.h> //para las variables de entorno .env
 #include <iostream>
 #include <cstdlib>
+
+const string USERS = "USERS_PATH";
+const string RESULT = "RESULT_PATH";
+const string PROCESS = "PROCESS_PATH";
+const string THREADS = "CANT_THREADS";
+const string MAP = "MAP_PATH";
+const string INDEX = "INDEX_PATH";
+const string EXT = "EXT_ARCHIVE";
+const string TEMP = "TEMP_PATH";
+const string STOP = "STOP_PATH";
+
 using namespace std;
 
 
@@ -83,8 +94,23 @@ int main(int argc, char* argv[]) {
 		cout << "Recuerda, debe ejecutarse como: ./miPrograma -u user -p password -t text -v numbers -n number\n" << endl;
         exit(1);
     }
+    //Inicializacion de las cosas del .env y para pasarlas directo al programa principal uwu <3
     dotenv::init();
-    int rol = validateUser(username,password);
+
+    string user_path = dotenv::getenv(USERS.c_str());
+    string result_path = dotenv::getenv(RESULT.c_str());
+    string process_path = dotenv::getenv(PROCESS.c_str());
+    string map_path = dotenv::getenv(MAP.c_str());
+    string index_path = dotenv::getenv(INDEX.c_str());
+    string temp_path = dotenv::getenv(TEMP.c_str());
+    string ext_archive = dotenv::getenv(EXT.c_str());
+    string cant_threads = dotenv::getenv(THREADS.c_str());
+    string stop_path = dotenv::getenv(STOP.c_str());
+
+    //Verificacion del usuario
+
+    int rol = validateUser(username,password,user_path);
+
     if(rol==0){
         cout<<"\nError, la contraseña o el usuario es incorrecto!"<<endl;
         exit(EXIT_FAILURE);
@@ -105,7 +131,8 @@ int main(int argc, char* argv[]) {
     cout << endl;
     cout << "Número: " << numero << endl;
     cout << "<>---------------------------------<>\n" << endl;
-    seleccionMenu(frase, numeros, numero,username,rol);
-
+    seleccionMenu(frase, numeros, numero,username,rol,
+        user_path,result_path,process_path,map_path,index_path
+        ,temp_path,ext_archive,cant_threads,stop_path);
     return 0;
 }

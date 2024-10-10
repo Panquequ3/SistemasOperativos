@@ -63,3 +63,6 @@ Este programa cuenta con las siguientes funcionalidades:
   * Lista de usuarios : A los usuarios de tipo Admin, muestra a todos los usuarios que estan almacenados con el formato ___"Usuario";"Contraseña";"Rol"___.
   
   * Eliminar un usuario : A los usuarios de tipo Admin, le permite eliminar a los usuarios que se especifiquen.
+
+## Atribucion
+Durante la creacion del proyecto se utilizo el archivo __stop_word.txt__ del repositorio [stop-words (Alir3z4)](https://github.com/Alir3z4/stop-words) que esta bajo la [licencia CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).

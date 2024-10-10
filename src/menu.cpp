@@ -30,10 +30,11 @@ void imprimeMenu(int rol){
     cout << "5) calcular f(x)=5x*x+1/x" << endl;
     cout << "6) programa contador de palabras" << endl;
     cout << "7) conteo paralelo con threads" << endl;
+    cout << "8) creador de indice para las palabras"<<endl;
     if(rol==2){
-        cout << "8) Añadir un usuario" << endl;
-        cout << "9) Lista de usuarios" << endl;
-        cout << "10) Eliminar un usuario" << endl;
+        cout << "9) Añadir un usuario" << endl;
+        cout << "10) Lista de usuarios" << endl;
+        cout << "11) Eliminar un usuario" << endl;
     }
     cout << "  <<-------------------->>\n" << endl;
 }
@@ -49,11 +50,13 @@ void imprimeMenu(int rol){
  * @param numero parametro a utilizar en la opcion (5)
  * 
  */
-void seleccionMenu(string texto, vector<int> numeros, float numero,string username, int rol){
+void seleccionMenu(string texto, vector<int> numeros, float numero,string username, int rol,
+    string user_path, string result_path, string process_path, string map_path,string index_path,
+    string temp_path, string ext_archive,string cant_threads,string stop_path){
 
     imprimeMenu(rol);
     int moreoptions = (rol==2)? 3 : 0 ;
-
+    bool IsProcessed = false;
     int opcion;
     cout << "¡bienvenido! seleccione la opción deseada: ";
     cin >> opcion;
@@ -61,7 +64,7 @@ void seleccionMenu(string texto, vector<int> numeros, float numero,string userna
     while (true){
         //.fail() capta si hay algun ingreso que genere error, en este caso que se ingrese algo que no es un numero
         //esta entrada fallida queda en un buffer
-        while (cin.fail() || opcion < 0 || (opcion > 6+moreoptions)) { 
+        while (cin.fail() || opcion < 0 || (opcion > 8+moreoptions)) { 
             cin.clear(); // Limpiar el estado de error del ingreso (reestablece el estado de cin)
             cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Ignora la entrada no válida (descarta lo que hay en el buffer)
             cout << "La opción ingresada no existe, por favor escoja una opción válida: ";
@@ -97,14 +100,22 @@ void seleccionMenu(string texto, vector<int> numeros, float numero,string userna
             imprimeMenu(rol);
         }
         if(opcion == 7){
-            system("./paralelo 4 ./data/procesar ./data/resultados txt ./data/stop_word.txt temporal");
+            string command = "./paralelo "+cant_threads+" "+process_path+" "+result_path+" "+ext_archive+" "+stop_path+" "+temp_path;
+            system(command.c_str());
+            //aqui falta hacer de ver que el programa anterior se ejecuto de manera correcta
         }
-        if(opcion == 8){
+        if(opcion == 8 && IsProcessed){
+            cout<<"Esto temporalmente esta aqui uwu"<<endl;
+        }
+        if(opcion == 9){
             string temp_usr = "",temp_psw,temp_rol;
+            
             cout<<endl<<"Nombre de usuario: ";
             cin >> temp_usr;
+
             cout << endl << "Contraseña: ";
             cin>>temp_psw;
+
             cout<<endl<<"Rol del usuario(Admin o Usuario): ";
             cin>>temp_rol;
             do{
@@ -112,18 +123,18 @@ void seleccionMenu(string texto, vector<int> numeros, float numero,string userna
                 cin>>temp_rol;
             }while(!(temp_rol=="Admin" || temp_rol=="Usuario"));
             
-            addUser(temp_usr,temp_psw,temp_rol);
-        }
-        if(opcion == 9){
-            showUser();
+            addUser(temp_usr,temp_psw,temp_rol,user_path);
         }
         if(opcion == 10){
+            showUser(user_path);
+        }
+        if(opcion == 11){
             string temp_usr = "";
             do{
                 cout<<endl<<"Ingrese usuario a eliminar: ";
                 cin>> temp_usr;
             }while(username==temp_usr);
-            deleteUser(temp_usr);
+            deleteUser(temp_usr,user_path);
         }
         cout << "\n¿Desea realizar otra acción? porfavor escoja una opción: ";
         cin >> opcion;

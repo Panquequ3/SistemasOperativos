@@ -52,10 +52,11 @@ bool compruebaContrasena(string pass){
  * @details Verifica si el usuario ingresado pertenence a la "base de datos", dando tambien su rol en forma de entero
  * @param user Nombre de usuario
  * @param password Clave del usuario
+ * @param path Path de donde se encuentra el archivo
  * @return 0 si no es usuario, 1 si es un usuario normal y 2 si es admin
  */
-int validateUser(string user, string password){
-    map<string, pair<string,string>>users = getUsers("","USERSPATH");
+int validateUser(string user, string password,string path){
+    map<string, pair<string,string>>users = getUsers("",path);
     if(users.find(user)!=users.end()){
         if(users[user].second==password){
             return (users[user].first.compare("Admin")?2:1);
@@ -69,10 +70,11 @@ int validateUser(string user, string password){
  * @brief retorna el rol del usuario
  * @details Verifica si el usuario ingresado pertenence a la "base de datos", dando su rol
  * @param user Nombre de usuario
+ * @param path Path del archivo del usuario
  * @return 0 si no es usuario, 1 si es un usuario normal y 2 si es admin
  */
-int rolUser(string user){
-    map<string,pair<string, string>>users=getUsers("","USERSPATH");
+int rolUser(string user,string path){
+    map<string,pair<string, string>>users=getUsers("",path);
     if(users.find(user)!=users.end()) return (users[user].first.compare("Admin")?2:1);
     return 0;
 }
@@ -81,10 +83,11 @@ int rolUser(string user){
  * @brief Comprueba que ya exista un usuario
  * @details Verifica si un usuario especifico ya estea presente en la "base de datos"
  * @param user Usuario a buscar
+ * @param path Path del archivo del usuario
  * @return verdadero si lo encontro, falso si no
  */
-bool findUser(string user){
-    map<string,pair<string,string>>users=getUsers("","USERSPATH");
+bool findUser(string user,string path){
+    map<string,pair<string,string>>users=getUsers("",path);
     return (users.find(user)!=users.end());
 }
 
@@ -96,11 +99,10 @@ bool findUser(string user){
  * @return Un vector con los usuarios dentro de la "base de datos"
  */
 map<string,pair<string,string>>getUsers(string exclude,string userpath){
-    string path = dotenv::getenv(userpath.c_str());
     string name="", rol = "", password = "";
     size_t start,end;
     map<string,pair<string,string>> users;
-    ifstream file(path);
+    ifstream file(userpath);
     if(!file.is_open()){
         cout<<"Error al cargar el archivo!!"<<endl;
         exit(EXIT_FAILURE);
@@ -128,11 +130,10 @@ map<string,pair<string,string>>getUsers(string exclude,string userpath){
  * @param user Nombre del usuario a ingresar
  * @param password Contraseña del usuario
  * @param rol Rol del usuario (Admin o Usuario General)
+ * @param path Path del archivo del usuario
  */
-void addUser(string user, string password, string rol){
-    string userpath = "USERSPATH";
-    string path = dotenv::getenv(userpath.c_str());
-    if (compruebaUsuario(user) && compruebaContrasena(password) && !findUser(user)){
+void addUser(string user, string password, string rol,string path){
+    if (compruebaUsuario(user) && compruebaContrasena(password) && !findUser(user,path)){
         ofstream file(path,ios::app);
         file << endl << user+";"+password+";"+rol;
         file.close();
@@ -147,13 +148,12 @@ void addUser(string user, string password, string rol){
  * @brief Elimina un usuario a la "Base de datos"
  * @details Elimina por completo a un usuario de la "base de datos"
  * @param user Nombre del usuario a eliminar
+ * @param userpath Path del archivo del usuario
  */
-void deleteUser(string user){
-    string userpath = "USERSPATH";
-    string path = dotenv::getenv((userpath.c_str()));
-    if(findUser(user) && rolUser(user)!=2){
-        map<string,pair<string,string>> temp = getUsers(user,"USERSPATH");
-        ofstream file(path,ios::trunc);
+void deleteUser(string user,string userpath){
+    if(findUser(user,userpath) && rolUser(user,userpath)!=2){
+        map<string,pair<string,string>> temp = getUsers(user,userpath);
+        ofstream file(userpath,ios::trunc);
         for(const auto& i:temp){
             file << i.first << ";" << i.second.second << ";"<< i.second.first << endl;
         }
@@ -166,9 +166,10 @@ void deleteUser(string user){
 }
 /**
  * @brief Muestra a los usuarios con su rol
+ * @param path Path del archivo del usuario
  */
-void showUser(){
-    map<string,pair<string,string>>users=getUsers("","USERSPATH");
+void showUser(string path){
+    map<string,pair<string,string>>users=getUsers("",path);
     cout << "Usuarios ------ Rol"<<endl;
     for(const auto& i:users){
         cout<< i.first << "   " << i.second.first << endl;

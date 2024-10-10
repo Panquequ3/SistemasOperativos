@@ -61,13 +61,23 @@ void seleccionMenuCont(){
         if(opcion == 2){
             cout << "Ingrese el path de la carpeta a procesar : ";
             cin >> carpetaP;
+            while(isR && carpetaP == carpetaR){
+                cout << "Error, la carpeta ingresada fue ingresada anteriormente como Carpeta de resultado"<<endl;
+                cout << "Ingrese el path de la carpeta a procesar nuevamente : ";
+                cin >> carpetaP;
+            }
             //Comprobamos que el path exista, y que sea una carpeta
             if (filesystem::exists(carpetaP) && filesystem::is_directory(carpetaP)) isP = true;
             else cout << "por favor, ingrese una carpeta existente";
         }
         if(opcion == 3){
             cout << "Ingrese el path de la carpeta que contendrá el resultado : ";
-            cin >> carpetaR;  
+            cin >> carpetaR;
+            while(isP && carpetaP == carpetaR){
+                cout << "Error, la carpeta ingresada fue ingresada anteriormente como Carpeta de proceso"<<endl;
+                cout << "Ingrese el path de la carpeta que contendra el resultado nuevamente : ";
+                cin >> carpetaP;
+            }
             //Comprobamos que el path exista, y que sea una carpeta
             if (filesystem::exists(carpetaR) && filesystem::is_directory(carpetaR)) isR = true;
             else cout << "por favor, ingrese una carpeta existente";
@@ -80,8 +90,8 @@ void seleccionMenuCont(){
                 procesa(carpetaP, carpetaR, extension);
             else{
                 if(!isExt) cout << "Falta ingresar la extensión de los archivos" << endl;
-                if(!isR) cout << "Falta ingresar la carpeta donde se ubican los archivos a procesar" << endl;
-                if(!isP) cout << "Falta ingresar la carpeta donde se ubicara el resultado" << endl;
+                if(!isP) cout << "Falta ingresar la carpeta donde se ubican los archivos a procesar" << endl;
+                if(!isR) cout << "Falta ingresar la carpeta donde se ubicara el resultado" << endl;
                 cout << "vuelva a intentarlo" << endl;
                 }
             }        
