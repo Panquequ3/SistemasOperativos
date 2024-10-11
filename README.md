@@ -15,7 +15,7 @@ palabra palíndromo, hasta evaluar un número en una función específica, esta 
 ## Instalacion / Compilacion
 * Para la instalación del programa basta con clonar el repositorio, y tambien clonar la [libreria dotenv-cpp](https://github.com/laserpants/dotenv-cpp.git) y añadirla a la carpeta __"external"__ junto con el resto, de lo contrario el .env con las variables de entorno no podran ser leidas correctamente. Asegurate de mantener todos los archivos en las carpetas correctas, en caso de no ejecutarse correctamente, verificar que la ubicación de cada archivo. 
 
-* > Importante mencionar que se deben compilar 3 programas previamente, el programa principal (con make) y los programas que ejecutan la opción (6) y (7) (con "make -f MakefileC" y "make -f MakefileP)
+* > Importante mencionar que se deben compilar 3 programas previamente, el programa principal (con make) y los programas que ejecutan la opción (6) , (7) y (8) (con "make -f MakefileC" , "make -f MakefileP" y "make -f MakefileI")
 
 ## Ejecucion
 En esta sección se detalla como ejecutar el programa junto con una descripción de los argumentos de lanzamiento.  
@@ -58,6 +58,8 @@ Este programa cuenta con las siguientes funcionalidades:
   Cuenta las palabras en los archivos de entrada, generando archivos de salida con los resultados.
   
   * Conteo paralelo con threads : llama a un programa externo que permite las mismas funcionalidades que en el contador de palabras, con la diferencia de que este proceso se llevará a cabo con una cantidad determinada de hilos.
+
+  * Creacion de indice: llama a un programa externo que crea un indice de las palabras que se repiten en los archivos de procesar, siempre y cuando el proceso anterior __Conteo paralelo con threads__ fue llamado antes
 
   * Añadir un usuario : A los usuarios de tipo Admin, le permite añadir usuarios, con la condicion de que estos no estean repetidos.  
   Para añadir un usuario general, sin acceso a funciones del Administrador, se debe ingresar en la parte de ___"Rol: "___ el valor ___Usuario___, en caso de querer agregar un Administrador nuevo dentro de la base de datos, se coloca ___"Admin"___

@@ -8,7 +8,8 @@
 #include <filesystem> //para verificar archivos
 using namespace std;
 
-
+const string resultados = "resultados";
+const string procesar = "procesar";
 
 /**
  * @brief Funcion que imprime el menu
@@ -61,8 +62,8 @@ void seleccionMenuCont(){
         if(opcion == 2){
             cout << "Ingrese el path de la carpeta a procesar : ";
             cin >> carpetaP;
-            while(isR && carpetaP == carpetaR){
-                cout << "Error, la carpeta ingresada fue ingresada anteriormente como Carpeta de resultado"<<endl;
+            while(isR && carpetaP == carpetaR && carpetaP.compare(procesar)){
+                cout << "Error, No se permite el uso de esa carpeta o ya se esta utilizando"<<endl;
                 cout << "Ingrese el path de la carpeta a procesar nuevamente : ";
                 cin >> carpetaP;
             }
@@ -73,8 +74,8 @@ void seleccionMenuCont(){
         if(opcion == 3){
             cout << "Ingrese el path de la carpeta que contendrá el resultado : ";
             cin >> carpetaR;
-            while(isP && carpetaP == carpetaR){
-                cout << "Error, la carpeta ingresada fue ingresada anteriormente como Carpeta de proceso"<<endl;
+            while(isP && carpetaP == carpetaR && carpetaR.compare(resultados)){
+                cout << "Error, No se permite el uso de esa carpeta o ya se esta utilizando"<<endl;
                 cout << "Ingrese el path de la carpeta que contendra el resultado nuevamente : ";
                 cin >> carpetaP;
             }

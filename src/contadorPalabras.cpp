@@ -1,6 +1,8 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <cctype>
+#include <algorithm>
 #include <map> //para map, para almacenar cada palabra y su cantidad de apariciones en un archivo
 #include <sstream> // Para istringstream
 #include <filesystem> //para explorar archivos en una carpeta
@@ -28,6 +30,8 @@ void procesa(string carpetaP, string carpetaR, string extension) {
                 istringstream stream(linea); // Convierte la línea en un stream para procesar palabra por palabra
                 string palabra;
                 while (stream >> palabra) { // Extrae cada palabra de la línea
+                    transform(palabra.begin(), palabra.end(), palabra.begin(), ::tolower);
+                    palabra.erase(remove_if(palabra.begin(),palabra.end(), [](char c){return ! isalnum(c);}),palabra.end());
                     contadorPalabras[palabra]++; // Incrementa el contador para la palabra en el map
                     // Si la palabra es nueva, se crea en el map con valor 1
                     // Si ya existe, se incrementa su contador

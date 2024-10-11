@@ -2,6 +2,7 @@
 #include <iostream>
 #include <fstream> // Para escribir, leer archivos, etc
 #include <string>
+#include <cctype>
 #include <map> // Para map, para almacenar cada palabra y su cantidad de apariciones en un archivo
 #include <sstream> // Para istringstream
 #include <filesystem> //para explorar archivos en una carpeta
@@ -105,7 +106,7 @@ void cleanArc(unordered_set<string> stopWords, string archive, string pathTemp){
         cerr << "No se pudo abrir el archivo para escritura." << endl;
         return;  
     }
-
+    //aqui falta algo para hacer que se elimine cualquier cosa no alpha numeric
     //reescribiremos el archivo original sin las stopwords en uno nuevo
     string line;
     while (getline(inputAr, line)) { // Lee el archivo línea por línea
@@ -114,6 +115,9 @@ void cleanArc(unordered_set<string> stopWords, string archive, string pathTemp){
         while (stream >> word) { // Extrae cada palabra de la línea
             // Si la palabra no es una stopword la escribimos
             transform(word.begin(), word.end(), word.begin(), ::tolower); //lo transformamos a minusculas para comparar
+            //Creo que con esta linea lo elimina del temporal haciendo que el problema sean los espacios
+            word.erase(remove_if(word.begin(),word.end(), [](char c){return ! isalnum(c);}),word.end());
+
             if(stopWords.find(word) == stopWords.end()){
                 outputAr << word << " ";
             }
@@ -168,8 +172,7 @@ void fileProcess(string folderR, string extension, unordered_set<string> stopWor
                 }
             }
             // Path donde se almacenará el archivo
-            string resultPath = folderR + "/" + tarea.path().stem().string() + ".txt";
-
+            string resultPath = folderR + "/" + to_string(fileMap[tarea.path().stem().string()]) + ".txt";
             cout << resultPath << ", " << wordCounter.size() << " palabras distintas" << endl;
             inputFile.close();
 

@@ -1,0 +1,12 @@
+CC=g++
+CFLAGS=-Wall -std=c++17 -Iexclusive
+BINS=oa
+
+all: clean programa
+
+programa:
+	$(CC) $(CFLAGS) -o fast exclusive/oa.cpp
+
+clean:
+	@echo " [CLN] Removing binary files... chao!!"
+	@rm -f $(BINS)

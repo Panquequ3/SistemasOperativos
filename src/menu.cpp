@@ -56,7 +56,7 @@ void seleccionMenu(string texto, vector<int> numeros, float numero,string userna
 
     imprimeMenu(rol);
     int moreoptions = (rol==2)? 3 : 0 ;
-    bool IsProcessed = false;
+    bool isProcessed = false;
     int opcion;
     cout << "¡bienvenido! seleccione la opción deseada: ";
     cin >> opcion;
@@ -101,11 +101,23 @@ void seleccionMenu(string texto, vector<int> numeros, float numero,string userna
         }
         if(opcion == 7){
             string command = "./paralelo " + cant_threads + " " + process_path + " " + result_path + " " + ext_archive + " " + stop_path + " " + temp_path;
-            system(command.c_str());
-            //aqui falta hacer de ver que el programa anterior se ejecuto de manera correcta
+            int temp = system(command.c_str());
+            isProcessed = temp!=0;
         }
-        if(opcion == 8 && IsProcessed){
-            cout<<"Esto temporalmente esta aqui uwu"<<endl;
+        if(opcion == 8){
+            if(isProcessed){
+                string command_i = "./index "+index_path+ " "+process_path;
+                int temp_2 = system(command_i.c_str());
+                if(temp_2==1){
+                    cout <<"la ejecucion del programa fue un exito."<< endl<<"La ruta del indice es "<<index_path<<endl;
+                }
+                else{
+                    cout<< "Error al ejecutar la opcion 8"<<endl;
+                }
+            }
+            else{
+                cout <<"El proceso de la opcion 7 no fue ejecutado"<<endl <<"ejecutalo antes de volver a usar esta opcion"<<endl;
+            }
         }
         if(opcion == 9){
             string temp_usr = "",temp_psw,temp_rol;

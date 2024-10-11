@@ -1,0 +1,12 @@
+CC=g++
+CFLAGS=-Wall -std=c++17 -Isrc
+BINS=indexProcess
+
+all: clean programa
+
+programa:
+	$(CC) $(CFLAGS) -o index src/indexProcess.cpp
+
+clean:
+	@echo " [CLN] Removing binary files... chao!!"
+	@rm -f $(BINS)

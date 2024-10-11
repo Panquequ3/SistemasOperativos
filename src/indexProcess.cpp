@@ -14,7 +14,7 @@ int main(int argc, char* argv[]){
     }
     string index_path = argv[1];
     string process_path = argv[2];
-    indexCreator(process_path,index_path)
+    indexCreator(process_path,index_path);
     return EXIT_SUCCESS;
 }
 
@@ -44,7 +44,7 @@ void indexCreator(string process_path,string index_path){
                     words[word] = "("+id+","+cant+");";
                 }
                 else{
-                    words[word] = words[word]+"("+id+","+cant+");";
+                    words[word] = words[word]+"(ID"+id+","+cant+");";
                 }
             }
             inputFile.close();
@@ -55,5 +55,4 @@ void indexCreator(string process_path,string index_path){
         file << i.first << ";" << i.second << endl;
     }
     file.close();
-    return words;
 }
