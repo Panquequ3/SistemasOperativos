@@ -13,10 +13,9 @@ int main(int argc, char* argv[]){
     string pathR = argv[3];
     string ext = argv[4];
     string stopWord = argv[5];
-    cout << stopWord << endl;
     string temp = argv[6];
 
     //ej : assignThreads(4, "./data/procesar", "./data/resultados","txt", "./data/stop_word.txt", "./data/temporal");
-    //assignThreads(numTh, pathP, pathR, ext, stopWord, temp);
+    assignThreads(numTh, pathP, pathR, ext, stopWord, temp);
     return 0;
 }

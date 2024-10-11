@@ -16,17 +16,17 @@
 using namespace std;
 
 // VARIABLES GLOBALES
-queue<filesystem::directory_entry> taskQueue; // Cola de tareas
-mutex queueMutex; // Mutex para proteger la cola
-condition_variable condV; // Variable de condición
-bool finished = false;      // Variable para indicar si todas las tareas han sido procesadas
+queue<filesystem::directory_entry> taskQueue; // Cola de tareas. Global para que todos los hilos tengan acceso a la misma instancia
+mutex queueMutex; // Mutex para proteger la cola. Global para asegurar una buena sincronización
+condition_variable condV; // Variable de condición. Global para simplificar implementación
+bool finished = false;      // Variable para indicar si todas las tareas han sido procesadas. Global para simplificar implementación
 
 // obs directory_entry: contiene información sobre un archivo o subdirectorio,
 // por ejemplo, path, tipo de archivo.. etc
 
 /**
  * @brief Función que toma palabras de un archivo y las almacena en un unordered_set
- * 
+ * obs : solo es util para archivos que tienen una palabra por linea.
  * @param folderP path de la carpeta de los archivos a mapear
  * @param folderR path de la carpeta donde dejar el archivo map
  * @param extension extensión de los archivos a procesar y a almacenar en el archivo map
@@ -43,8 +43,8 @@ unordered_set<string> archiveToSet(string wordsPath){
     // obtiene la linea del archivo de entrada y la almacena en "line"
     string line;
     while (getline(archive, line)) { // Lee el archivo línea por línea
-        line.erase(0, line.find_first_not_of(" \t\n\r\f\v"));
-        line.erase(line.find_last_not_of(" \t\n\r\f\v") + 1);
+        line.erase(0, line.find_first_not_of(" \t\n\r\f\v")); // limpiamos la linea (eliminamos espacios en blanco al principio y final)
+        line.erase(line.find_last_not_of(" \t\n\r\f\v") + 1); // el +1 asegura que limpiamos desde el 1er espacio blanco
         words.insert(line); // llenamos el set con las palabras del archivo
     }
 
@@ -78,7 +78,7 @@ map<string, int> mapArchive(string folderP, string folderR, string extension){
             id++;
         }
     }
-    mapA.close(); // cerramos el archivo
+    mapA.close(); 
     return mapArc;
 }
 
@@ -116,7 +116,6 @@ void cleanArc(unordered_set<string> stopWords, string archive, string pathTemp){
             transform(word.begin(), word.end(), word.begin(), ::tolower); //lo transformamos a minusculas para comparar
             if(stopWords.find(word) == stopWords.end()){
                 outputAr << word << " ";
-                //cout << "Se escribio la palabra: " << word << endl;
             }
 
         }
@@ -212,12 +211,12 @@ void assignThreads(int numThreads, string folderP, string folderR, string extens
             extension = "." + extension;
             unordered_set<string> stopWords = archiveToSet(stopWordPath); //Creamos el set con las stopwords
             map<string, int> fileMap = mapArchive(folderP, folderR, extension); //creamos el archivo map, y de paso una estructura auxiliar
-            //cout << "\npalabras añadidas al set : " << stopWords.size() << endl;
+
             thread threads[numThreads]; //Creamos los hilos a utilizar
                 // Recorremos y imprimimos todos los elementos
 
             for (int i = 0; i < numThreads; ++i) {
-                threads[i] = thread(fileProcess, folderP, extension, stopWords, fileMap, tempPath);
+                threads[i] = thread(fileProcess, folderR, extension, stopWords, fileMap, tempPath);
             } //quedan en espera hasta que hayan tareas en cola
 
             // Llenar la cola de tareas con los archivos que coincidan con la extensión
@@ -251,7 +250,3 @@ void assignThreads(int numThreads, string folderP, string folderR, string extens
     }
 
 }
-
-// int main(){
-//      assignThreads(4, "../data/procesar", "../data/resultados","txt", "../data/stop_word.txt", "../data/temporal");
-// }

@@ -100,7 +100,7 @@ void seleccionMenu(string texto, vector<int> numeros, float numero,string userna
             imprimeMenu(rol);
         }
         if(opcion == 7){
-            string command = "./paralelo "+cant_threads+" "+process_path+" "+result_path+" "+ext_archive+" "+stop_path+" "+temp_path;
+            string command = "./paralelo " + cant_threads + " " + process_path + " " + result_path + " " + ext_archive + " " + stop_path + " " + temp_path;
             system(command.c_str());
             //aqui falta hacer de ver que el programa anterior se ejecuto de manera correcta
         }
