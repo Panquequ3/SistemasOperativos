@@ -15,7 +15,7 @@
 using namespace std;
 
 unordered_set<string> archiveToSet(string wordsPath);
-map<string, int> mapArchive(string folderP, string folderR, string extension);
+map<string, int> mapArchive(string folderP, string mapPath, string extension);
 void cleanArc(unordered_set<string> stopWords, string archive, string pathTemp);
 void fileProcess(string folderR, string extension, unordered_set<string> stopWords, map<string, int> fileMap, string tempPath);
-void assignThreads(int numThreads, string folderP, string folderR, string extension, string stopWordPath, string tempPath);
+void assignThreads(int numThreads, string folderP, string folderR, string extension, string stopWordPath, string tempPath, string mapPath);

@@ -4,8 +4,8 @@ using namespace std;
 
 int main(int argc, char* argv[]){
     //En caso de reutilizarlo en otra parte
-	if(argc != 7){
-		cout << "Error. Debe ejecutarse como ./paralelo nHilos pathP pathR extension pathStopWord pathTemp" << endl;
+	if(argc != 8){
+		cout << "Error. Debe ejecutarse como ./paralelo nHilos pathP pathR extension pathStopWord pathTemp mapPath" << endl;
 		exit(EXIT_FAILURE);
 	}
     int numTh = atoi(argv[1]);
@@ -14,8 +14,9 @@ int main(int argc, char* argv[]){
     string ext = argv[4];
     string stopWord = argv[5];
     string temp = argv[6];
+    string map = argv[7];
 
-    //ej : assignThreads(4, "./data/procesar", "./data/resultados","txt", "./data/stop_word.txt", "./data/temporal");
-    assignThreads(numTh, pathP, pathR, ext, stopWord, temp);
+    //ej : assignThreads(4, "./data/procesar", "./data/resultados","txt", "./data/stop_word.txt", "./data/temporal", "./data/map.txt");
+    assignThreads(numTh, pathP, pathR, ext, stopWord, temp, map);
     return 0;
 }

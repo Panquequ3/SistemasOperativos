@@ -28,9 +28,7 @@ bool finished = false;      // Variable para indicar si todas las tareas han sid
 /**
  * @brief Función que toma palabras de un archivo y las almacena en un unordered_set
  * obs : solo es util para archivos que tienen una palabra por linea.
- * @param folderP path de la carpeta de los archivos a mapear
- * @param folderR path de la carpeta donde dejar el archivo map
- * @param extension extensión de los archivos a procesar y a almacenar en el archivo map
+ * @param wordsPath path de la carpeta del archivo a pasar al unordered_set
  */
 unordered_set<string> archiveToSet(string wordsPath){
     ifstream archive(wordsPath);  // Abre el archivo para procesarlo
@@ -60,10 +58,10 @@ unordered_set<string> archiveToSet(string wordsPath){
  * @param folderR path de la carpeta donde dejar el archivo map
  * @param extension extensión de los archivos a procesar y a almacenar en el archivo map
  */
-map<string, int> mapArchive(string folderP, string folderR, string extension){
+map<string, int> mapArchive(string folderP, string mapPath, string extension){
     map<string, int> mapArc; // map con lo mismo que tendrá el archivo
     int id = 0;
-    ofstream mapA(folderR + "/map.txt");  //Creamos el archivo
+    ofstream mapA(mapPath);  //Creamos el archivo
 
     // directory_iterator: Se usa para recorrer los archivos y subdirectorios de un directorio. 
     // Es un iterador que avanza de archivo en archivo. (iterador Lazy => no carga todos los archivos en memoria de una vez)
@@ -209,11 +207,11 @@ void fileProcess(string folderR, string extension, unordered_set<string> stopWor
  * @param folderR path del archivo en donde dejar los resultados
  * @param extension extension de los archivos a procesar
  */
-void assignThreads(int numThreads, string folderP, string folderR, string extension, string stopWordPath, string tempPath){
+void assignThreads(int numThreads, string folderP, string folderR, string extension, string stopWordPath, string tempPath, string mapPath){
         if (folderP != folderR){
             extension = "." + extension;
             unordered_set<string> stopWords = archiveToSet(stopWordPath); //Creamos el set con las stopwords
-            map<string, int> fileMap = mapArchive(folderP, folderR, extension); //creamos el archivo map, y de paso una estructura auxiliar
+            map<string, int> fileMap = mapArchive(folderP, mapPath, extension); //creamos el archivo map, y de paso una estructura auxiliar
 
             thread threads[numThreads]; //Creamos los hilos a utilizar
                 // Recorremos y imprimimos todos los elementos

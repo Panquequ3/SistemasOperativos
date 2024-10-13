@@ -30,7 +30,7 @@ void imprimeMenu(int rol){
     cout << "5) calcular f(x)=5x*x+1/x" << endl;
     cout << "6) programa contador de palabras" << endl;
     cout << "7) conteo paralelo con threads" << endl;
-    cout << "8) creador de indice para las palabras"<<endl;
+    cout << "8) creación indice invertido"<<endl;
     if(rol==2){
         cout << "9) Añadir un usuario" << endl;
         cout << "10) Lista de usuarios" << endl;
@@ -100,15 +100,15 @@ void seleccionMenu(string texto, vector<int> numeros, float numero,string userna
             imprimeMenu(rol);
         }
         if(opcion == 7){
-            string command = "./paralelo " + cant_threads + " " + process_path + " " + result_path + " " + ext_archive + " " + stop_path + " " + temp_path;
+            string command = "./paralelo " + cant_threads + " " + process_path + " " + result_path + " " + ext_archive + " " + stop_path + " " + temp_path + " " + map_path;
             int temp = system(command.c_str());
-            isProcessed = temp!=0;
+            isProcessed = temp==0;
         }
         if(opcion == 8){
             if(isProcessed){
                 string command_i = "./index "+index_path+ " "+process_path;
                 int temp_2 = system(command_i.c_str());
-                if(temp_2==1){
+                if(temp_2==0){
                     cout <<"la ejecucion del programa fue un exito."<< endl<<"La ruta del indice es "<<index_path<<endl;
                 }
                 else{
