@@ -114,9 +114,9 @@ void cleanArc(unordered_set<string> stopWords, string archive, string pathTemp){
             // Si la palabra no es una stopword la escribimos
             transform(word.begin(), word.end(), word.begin(), ::tolower); //lo transformamos a minusculas para comparar
             //Creo que con esta linea lo elimina del temporal haciendo que el problema sean los espacios
-            word.erase(remove_if(word.begin(),word.end(), [](char c){return ! isalnum(c);}),word.end());
+            word.erase(remove_if(word.begin(),word.end(), [](char c){return !isalnum(c);}),word.end());
 
-            if(stopWords.find(word) == stopWords.end()){
+            if(stopWords.find(word) == stopWords.end() && !word.empty()){
                 outputAr << word << " ";
             }
 

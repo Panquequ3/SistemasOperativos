@@ -106,7 +106,7 @@ void seleccionMenu(string texto, vector<int> numeros, float numero,string userna
         }
         if(opcion == 8){
             if(isProcessed){
-                string command_i = "./index "+index_path+ " "+process_path;
+                string command_i = "./index "+index_path+ " "+result_path;
                 int temp_2 = system(command_i.c_str());
                 if(temp_2==0){
                     cout <<"la ejecucion del programa fue un exito."<< endl<<"La ruta del indice es "<<index_path<<endl;

@@ -41,7 +41,7 @@ void indexCreator(string process_path,string index_path){
                 end++;
                 cant = temp.substr(end);
                 if(words.find(word)==words.end()){
-                    words[word] = "("+id+","+cant+");";
+                    words[word] = "(ID"+id+","+cant+");";
                 }
                 else{
                     words[word] = words[word]+"(ID"+id+","+cant+");";
