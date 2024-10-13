@@ -18,7 +18,6 @@ palabra palíndromo, hasta evaluar un número en una función específica, esta 
 * > Importante mencionar que se deben compilar 3 programas previamente, el programa principal (con make) y los programas que ejecutan la opción (6) , (7) y (8) (con "make -f MakefileC" , "make -f MakefileP" y "make -f MakefileI")
 
 ## Ejecucion
-En esta sección se detalla como ejecutar el programa junto con una descripción de los argumentos de lanzamiento.  
 
 Posterior a la compilación, utilizaremos el comando
 ```bash
@@ -37,6 +36,8 @@ para acceder al programa.
 | v | Especifica el vector de numeros      |
 | n | Especifica un número real            |
 
+Importante mencionar que para la modificación de los valores entregados desde menu.cpp en las opciones (7) y (8), se deben modificar las variables de entorno necesarias.
+(no confundir opción (6) con (7), ya que la opción (6) no hace uso de estas).
 
 ## Funciones
 En esta sección se detallan las funciones que posee el programa y ejemplos de ejecución de estas.    
@@ -69,4 +70,15 @@ Este programa cuenta con las siguientes funcionalidades:
   * Eliminar un usuario : A los usuarios de tipo Admin, le permite eliminar a los usuarios que se especifiquen.
 
 ## Atribucion
-Durante la creacion del proyecto se utilizo el archivo __stop_word.txt__ del repositorio [stop-words (Alir3z4)](https://github.com/Alir3z4/stop-words) que esta bajo la [licencia CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
+Durante la creación del proyecto se utilizó el archivo __stop_word.txt__ del repositorio [stop-words (Alir3z4)](https://github.com/Alir3z4/stop-words) que esta bajo la [licencia CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
+Además de el repositorio [7506Condor1C2014 (nahuel36)](https://github.com/busiris2014/7506Condor1C2014) del cual se extrajeron los archivos para la ejecución de la opción (7).
+## Variables de entorno
+
+RESULT_PATH= (explicar)
+PROCESS_PATH= (explicar)
+CANT_THREADS= (explicar)
+MAP_PATH = 
+INDEX_PATH= 
+EXT_ARCHIVE =
+STOP_PATH=
+TEMP_PATH = 

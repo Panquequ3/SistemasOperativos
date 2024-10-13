@@ -1,3 +1,21 @@
 "beeemovie", 0
-"lasirena", 1
-"Umberto Eco - El Nombre de la Rosa", 2
+"Christopher Paolini - El Legado 2 - Eldest", 1
+"Christopher Paolini - El Legado 3 - Brisingr", 2
+"Dan Brown - Ángeles y Demonios", 3
+"Gabriel García Márquez - Vivir para contarla", 4
+"George Norman Lippert - James Potter 1 - La Encrucijada de los Mayores", 5
+"George Norman Lippert - James Potter 2 - La Maldición del Guardián", 6
+"George R. R. Martin - Canción de Hielo y Fuego 1 - Juego de Tronos", 7
+"George R. R. Martin - Canción de Hielo y Fuego 2 - Choque de Reyes", 8
+"George R. R. Martin - Canción de Hielo y Fuego 3 - Tormenta de espadas I", 9
+"George R. R. Martin - Canción de Hielo y Fuego 3 - Tormenta de espadas II", 10
+"J.K. Rowling - Harry Potter 4 - El Cáliz de Fuego", 11
+"J.K. Rowling - Harry Potter 5 - La Orden del Fenix", 12
+"J.K. Rowling - Harry Potter 6 - El Misterio del Príncipe", 13
+"J.K. Rowling - Harry Potter 7 - Las Reliquias de la Muerte", 14
+"lasirena", 15
+"Robert Ludlum - El caso Bourne", 16
+"Stephanie Meyer - Crepúsculo 1 - Crepúsculo", 17
+"Stephanie Meyer - Crepúsculo 3 - Eclipse", 18
+"Stephanie Meyer - Crepúsculo 4 - Amanecer", 19
+"Umberto Eco - El Nombre de la Rosa", 20
