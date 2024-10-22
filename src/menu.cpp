@@ -66,7 +66,7 @@ void seleccionMenu(string texto, vector<int> numeros, float numero,string userna
     while (true){
         //.fail() capta si hay algun ingreso que genere error, en este caso que se ingrese algo que no es un numero
         //esta entrada fallida queda en un buffer
-        while (cin.fail() || opcion < 0 || (opcion > 8+moreoptions)) { 
+        while (cin.fail() || opcion < 0 || (opcion > 10+moreoptions)) { 
             cin.clear(); // Limpiar el estado de error del ingreso (reestablece el estado de cin)
             cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Ignora la entrada no válida (descarta lo que hay en el buffer)
             cout << "La opción ingresada no existe, por favor escoja una opción válida: ";
@@ -125,7 +125,7 @@ void seleccionMenu(string texto, vector<int> numeros, float numero,string userna
 
         }
         if(opcion == 10){
-            
+
         }
 
         if(opcion == 11){
