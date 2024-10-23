@@ -20,6 +20,13 @@ const string INDEX = "INDEX_PATH";
 const string EXT = "EXT_ARCHIVE";
 const string TEMP = "TEMP_PATH";
 const string STOP = "STOP_PATH";
+const string ARRAY = "ARRAY_THREADS";
+const string REP = "REPEATS";
+const string STORE = "STORE_DATA_PATH";
+const string GRAPH = "GRAPHIC_PATH";
+const string PCORE = "PROCESS_CORE_PATH";
+const string CCORE = "CANT_CORES";
+const string RCORE = "RESULT_CORE_PATH";
 
 using namespace std;
 
@@ -106,6 +113,13 @@ int main(int argc, char* argv[]) {
     string ext_archive = dotenv::getenv(EXT.c_str());
     string cant_threads = dotenv::getenv(THREADS.c_str());
     string stop_path = dotenv::getenv(STOP.c_str());
+    string array_threads = dotenv::getenv(ARRAY.c_str());
+    string repeats = dotenv::getenv(REP.c_str());
+    string store_data_path = dotenv::getenv(STORE.c_str());
+    string graphic_path = dotenv::getenv(GRAPH.c_str());
+    string process_core_path = dotenv::getenv(PCORE.c_str());
+    string cant_cores = dotenv::getenv(CCORE.c_str());
+    string result_core_path = dotenv::getenv(RCORE.c_str());
 
     //Verificacion del usuario
 
@@ -133,6 +147,8 @@ int main(int argc, char* argv[]) {
     cout << "<>---------------------------------<>\n" << endl;
     seleccionMenu(frase, numeros, numero,username,rol,
         user_path,result_path,process_path,map_path,index_path
-        ,temp_path,ext_archive,cant_threads,stop_path);
+        ,temp_path,ext_archive,cant_threads,stop_path,
+        array_threads,repeats,store_data_path,graphic_path,
+        process_core_path, cant_cores, result_core_path);
     return 0;
 }
