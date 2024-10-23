@@ -94,6 +94,7 @@ void coordinator(int numCores, string tasksPath, string path){
             
             string msg = "(" + core + ":" + t + ")";
             system(./mainDist msg);
+            //probando push del
         }
     }
 
