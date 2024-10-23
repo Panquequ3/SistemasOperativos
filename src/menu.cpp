@@ -121,11 +121,11 @@ void seleccionMenu(string texto, vector<int> numeros, float numero,string userna
                 cout <<"El proceso de la opcion 7 no fue ejecutado"<<endl <<"ejecutalo antes de volver a usar esta opcion"<<endl;
             }
         }
-        if(opcion == 9){
+        if(opcion == 9){ // analisis de performance
 
         }
-        if(opcion == 10){
-
+        if(opcion == 10){ // planificador
+            //system("./planificador");
         }
 
         if(opcion == 11){
