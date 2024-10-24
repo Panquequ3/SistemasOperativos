@@ -43,7 +43,7 @@ void archiveCores(int numCores, string path = "/temporal"){
             cerr << "No se pudo abrir el archivo para escritura." << endl;
             return;  
         }
-        outputArc << "1" << endl; // inicialmente todos en estado dispobible
+        outputArc << "1"; // inicialmente todos en estado dispobible
         outputArc.close();
     }
 }
@@ -80,6 +80,7 @@ void coordinator(int numCores, string tasksPath, string corePath, string resultP
         // Verifica si la línea no está vacía
         if (!line.empty()) {
             listTask.push_back(line);
+            cout << "Se añadio a las tareas: " << line << endl;
         } else {
             cerr << "Línea vacía encontrada y ignorada." << endl;
         }
@@ -92,10 +93,10 @@ void coordinator(int numCores, string tasksPath, string corePath, string resultP
     int completedTask = 0, totalTask = listTask.size(), i = 0, core;
 
     while (completedTask < totalTask){
-        string t = listTask[i]; // tomamos una tarea
         for (int j = 0; j < numCores; j++){    
+            string t = listTask[i]; // tomamos una tarea
             core = findDisp(numCores, corePath); // tomamos un core que la ejecute      
-            if (core != -1){ // si hay uno disponible, le otorgamos la tarea
+            if (core != -1 && (completedTask != totalTask)){ // si hay uno disponible, le otorgamos la tarea
                 cout << "core utilizado : " << core << endl;
             // --------------------- Cambiamos su estado ------------------------------
                 ofstream coreArc(corePath + "/" + to_string(core) + ".txt");
@@ -109,12 +110,14 @@ void coordinator(int numCores, string tasksPath, string corePath, string resultP
                 string msg = "(" + to_string(core) + ":" + t + ")"; //Suma entre string y un char[2] no sirve, eso ta pasando
                 string command = "./dist '" +  msg + "' '" + resultPath + "' '" + corePath + "'";
                 system(command.c_str());
-                i++;
-                completedTask++; //marcamos la tarea completada
+                i++; // avanzamos a la tarea siguiente
+                completedTask++; // marcamos la tarea completada
+                cout << "tareas completadas: " << completedTask << endl;
             } // si no, seguimos esperando un core disponible}
-            cout << "tareas completadas: " << completedTask << endl;
+            
         }
     }
+
     if (completedTask == totalTask){
         cleanAC(corePath);
     }
