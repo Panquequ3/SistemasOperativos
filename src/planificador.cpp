@@ -2,7 +2,7 @@
 #include <vector> // Para vector
 #include <fstream> // Para escribir, leer archivos, etc
 #include <filesystem> //para explorar archivos en una carpeta
-
+#include "planificador.h"
 using namespace std;
 
 //Funcion que retorna:
@@ -15,34 +15,38 @@ int findDisp(int numCore, vector<bool> list, string path = "/temporal"){
         ifstream inputArc(input.path());
         if(!inputArc){
             cerr << "No se pudo abrir el archivo " << input.path().string() << " para lectura" << endl;
+            continue; // Continúa al siguiente archivo
         }
         char state;
-        inputArc.get(state);
 
-        //si está disponible entonces
-        if(state == '1'){
-            string i = input.path().stem().string();
-            return stoi(i);
-        } //si no, seguimos
-        inputArc.close();
+        if (inputArc.get(state)) { // Verifica si la lectura del primer caracter fue exitosa
+            if (state == '1') {// Si está disponible entonces
+                string i = input.path().stem().string();
+                return stoi(i);
+            }else
+                inputArc.close(); //si no, seguimos
+        } else {
+            cerr << "No se pudo leer el estado del core" << input.path().stem().string() << endl;
+        }  
     }
+    // si no hay ninguno disponible entonces devolvemos -1
     return -1;
 }
 
 
-//Funcion que pasa los elementos de un string de la forma 
-// id;operación; num1, num2 a un vector -> {id, operacion, num1, num2}
+// funcion que crea los archivos para los cores
 void archiveCores(int numCores, string path = "/temporal"){
     for(int i = 0; i < numCores; i++){
-        ofstream outputArc(path + "/" + to_string(i));
+        ofstream outputArc(path + "/" + to_string(i) + ".txt");
         if (!outputArc) {
             cerr << "No se pudo abrir el archivo para escritura." << endl;
             return;  
         }
-        outputArc << "1" << endl;
+        outputArc << "1" << endl; // inicialmente todos en estado dispobible
         outputArc.close();
     }
 }
+
 void cleanAC(string path = "/temporal"){
     for (const auto& input : filesystem::directory_iterator(path)) {
 
@@ -51,16 +55,13 @@ void cleanAC(string path = "/temporal"){
 
     }
 }
-void coordinator(int numCores, string tasksPath, string path){
+//corePath recibira temp
+void coordinator(int numCores, string tasksPath, string corePath, string resultPath){
     // creamos los cores
-    // vector<bool> listCores;
-    // creamos la lista de tareas (las operaciones)
-    archiveCores(numCores); // creamos los archivos de estado de los cores
-    // for(int i = 0; i < numCores; i++){
-    //     listCores = true; //creamos la lista de cores, en estado disponible
-    // }
-    vector<string> listTask; // vector con las tareas
-    // procesamos el archivo con las tareas
+    ofstream archiveCores(numCores, corePath); // creamos los archivos de estado de los cores
+
+    // procesamos el archivo con las tareas ---------------------------------------------------------
+    vector<string> listTask; // creamos la lista de tareas (las operaciones)
 
     ifstream taskArchive(tasksPath); //Abrimos el archivo de con las operaciones
 
@@ -70,32 +71,37 @@ void coordinator(int numCores, string tasksPath, string path){
     }
     // añadimos las tareas en un formato util
     string line;
-    while(getline(archive, line)){
+    while(getline(archiveCores, line)){
         line.erase(0, line.find_first_not_of(" \t\n\r\f\v")); // limpiamos la linea (eliminamos espacios en blanco al principio y final)
         line.erase(line.find_last_not_of(" \t\n\r\f\v") + 1); // el +1 asegura que limpiamos desde el 1er espacio blanco
         listTask.push_back(line);
     }
     taskArchive.close();
 
+    // ----------------------------------------------------------------------------------------------
+
     // asignamos las tareas a los diferentes cores
     int completedTask = 0, totalTask = listTask.size(), i = 0, core;
 
     while (completedTask < totalTask){
-        string t = listTask[i];
-        core = findDisp(numCores);
-        if (core != -1){
-            ifstream coreArc(path + "/" + to_string(core));
+        string t = listTask[i]; // tomamos una tarea
+        core = findDisp(numCores, corePath); // tomamos un core que la ejecute
+        if (core != -1){ // si hay uno disponible, le otorgamos la tarea
+
+        // --------------------- Cambiamos su estado ------------------------------
+            ifstream coreArc(corePath + "/" + to_string(core) + ".txt");
             if(!coreArc){
                 cerr << "Error, no se pudo abrir el archivo, revise el path ingresado e intentelo nuevamente" << endl;
             }
             coreArc.seekp(0); // Mover el puntero de escritura al inicio del archivo
-            coreArc.put('1'); // Aquí escribimos '1', reemplazando lo que había
+            coreArc.put('1'); // Cambiamos su estado a ocupado
             coreArc.close();
-            
+        // ------------------------------------------------------------------------
             string msg = "(" + core + ":" + t + ")";
-            system(./mainDist msg);
-            //proandoooo
-        }
+            string command = "./dist " +  msg  + " " + resultPath " " + corePath;
+            system(command.c_str());
+            i++; //marcamos la tarea completada
+        } // si no, seguimos esperando un core disponible
     }
 
 }

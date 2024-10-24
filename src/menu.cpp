@@ -133,7 +133,8 @@ void seleccionMenu(string texto, vector<int> numeros, float numero,string userna
         }
         if(opcion == 10){ // planificador
         //Recuerda que se le pasan datos a algunos uwu z3
-            //system("./planificador");
+            string command = "./plan " + cant_cores + " " + process_core_path + " " + temp_path + " " + result_core_path;
+            system(command.c_str());
         }
 
         if(opcion == 11){

@@ -1,0 +1,12 @@
+CC=g++
+CFLAGS=-Wall -std=c++17 -Isrc -Iinclude
+BINS=mainPlan
+
+all: clean programa
+
+programa:
+	$(CC) $(CFLAGS) -o plan src/mainPlan.cpp  src/planificador.cpp
+
+clean:
+	@echo " [CLN] Removing binary files... chao!!"
+	@rm -f $(BINS)
