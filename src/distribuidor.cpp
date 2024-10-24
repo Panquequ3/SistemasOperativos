@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <fstream>
 #include "distribuidor.h"
 using namespace std;
 
@@ -35,7 +36,7 @@ vector<string> interpreteMsg(string msg){
     while(msg[i] != ';')
         i++;
     list.push_back(msg.substr(0,i));
-    msg = msg.substr(i+1); //trabajaremos con el str restante
+    msg = msg.substr(i+1); //trabajaremos con el str restante (Error_1)
     aux = "";
     i = 0;
 
@@ -62,16 +63,18 @@ vector<string> interpreteMsg(string msg){
     for (string elem : list) {
         cout << elem << endl;
     }
-
+    cout << endl;
     return list; 
 }
-
-void distributeToCore(string msg, string resultPath, string corePath){
+// corePath es la carpeta temp
+void distributeToCore(string msg, string resultPath = "./data/planificador/resultados.txt" , string corePath = "./data/temporal"){
     vector<string> data = interpreteMsg(msg); //{core, id, operacion, num1, num2}
-    //float result = system(./core msg);
-    int result = 0; //mientras aun no está core implementado
+    //float result = system(./core msg) //pero deberia de ser system(./core operation num1 num2); core no traduce, solo realiza
+    string result = "0"; //mientras aun no está core implementado
     
     // abrimos el archivo para escribir en el (añadiendo, no sobrescribiendo)
+
+    // pense que los archivos temporales eran para ver la informacion resultante, debido a que si es secuencial, deberiamos traducir lo de system
     ofstream resultArc(resultPath, ios::app);
 
     if(!resultArc){
@@ -83,7 +86,7 @@ void distributeToCore(string msg, string resultPath, string corePath){
 
     resultArc.close();
     // ----------------- Cambiamos el estado del core utilizado ------------------------------
-    ifstream coreArc(corePath + "/" + data[0] + ".txt");
+    ofstream coreArc(corePath + "/" + data[0] + ".txt");
     if(!coreArc){
         cerr << "Error, no se pudo abrir el archivo, revise el path ingresado e intentelo nuevamente" << endl;
     }

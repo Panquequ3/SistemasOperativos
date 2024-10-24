@@ -3,6 +3,7 @@
 #include <fstream> // Para escribir, leer archivos, etc
 #include <filesystem> //para explorar archivos en una carpeta
 #include "planificador.h"
+#include <sstream> // Para istringstream
 using namespace std;
 
 //Funcion que retorna:
@@ -10,7 +11,7 @@ using namespace std;
 // indice : si encontró un core disponible 
 // retorna el primer core encontrado
 // 1: disp 0: ocupado 
-int findDisp(int numCore, vector<bool> list, string path = "/temporal"){
+int findDisp(int numCore, string path = "/temporal"){
     for (const auto& input : filesystem::directory_iterator(path)) {
         ifstream inputArc(input.path());
         if(!inputArc){
@@ -58,7 +59,9 @@ void cleanAC(string path = "/temporal"){
 //corePath recibira temp
 void coordinator(int numCores, string tasksPath, string corePath, string resultPath){
     // creamos los cores
-    ofstream archiveCores(numCores, corePath); // creamos los archivos de estado de los cores
+
+    //Aqui tira error al compilar (E_1)
+    archiveCores(numCores, corePath); // creamos los archivos de estado de los cores
 
     // procesamos el archivo con las tareas ---------------------------------------------------------
     vector<string> listTask; // creamos la lista de tareas (las operaciones)
@@ -71,10 +74,15 @@ void coordinator(int numCores, string tasksPath, string corePath, string resultP
     }
     // añadimos las tareas en un formato util
     string line;
-    while(getline(archiveCores, line)){
+    while(getline(taskArchive, line)){
         line.erase(0, line.find_first_not_of(" \t\n\r\f\v")); // limpiamos la linea (eliminamos espacios en blanco al principio y final)
         line.erase(line.find_last_not_of(" \t\n\r\f\v") + 1); // el +1 asegura que limpiamos desde el 1er espacio blanco
-        listTask.push_back(line);
+        // Verifica si la línea no está vacía
+        if (!line.empty()) {
+            listTask.push_back(line);
+        } else {
+            cerr << "Línea vacía encontrada y ignorada." << endl;
+        }
     }
     taskArchive.close();
 
@@ -85,23 +93,29 @@ void coordinator(int numCores, string tasksPath, string corePath, string resultP
 
     while (completedTask < totalTask){
         string t = listTask[i]; // tomamos una tarea
-        core = findDisp(numCores, corePath); // tomamos un core que la ejecute
-        if (core != -1){ // si hay uno disponible, le otorgamos la tarea
-
-        // --------------------- Cambiamos su estado ------------------------------
-            ifstream coreArc(corePath + "/" + to_string(core) + ".txt");
-            if(!coreArc){
-                cerr << "Error, no se pudo abrir el archivo, revise el path ingresado e intentelo nuevamente" << endl;
-            }
-            coreArc.seekp(0); // Mover el puntero de escritura al inicio del archivo
-            coreArc.put('1'); // Cambiamos su estado a ocupado
-            coreArc.close();
-        // ------------------------------------------------------------------------
-            string msg = "(" + core + ":" + t + ")";
-            string command = "./dist " +  msg  + " " + resultPath " " + corePath;
-            system(command.c_str());
-            i++; //marcamos la tarea completada
-        } // si no, seguimos esperando un core disponible
+        for (int j = 0; j < numCores; j++){    
+            core = findDisp(numCores, corePath); // tomamos un core que la ejecute      
+            if (core != -1){ // si hay uno disponible, le otorgamos la tarea
+                cout << "core utilizado : " << core << endl;
+            // --------------------- Cambiamos su estado ------------------------------
+                ofstream coreArc(corePath + "/" + to_string(core) + ".txt");
+                if(!coreArc){
+                    cerr << "Error, no se pudo abrir el archivo, revise el path ingresado e intentelo nuevamente" << endl;
+                }
+                coreArc.seekp(0); // Mover el puntero de escritura al inicio del archivo
+                coreArc.put('0'); // Cambiamos su estado a ocupado
+                coreArc.close();
+            // ------------------------------------------------------------------------
+                string msg = "(" + to_string(core) + ":" + t + ")"; //Suma entre string y un char[2] no sirve, eso ta pasando
+                string command = "./dist '" +  msg + "' '" + resultPath + "' '" + corePath + "'";
+                system(command.c_str());
+                i++;
+                completedTask++; //marcamos la tarea completada
+            } // si no, seguimos esperando un core disponible}
+            cout << "tareas completadas: " << completedTask << endl;
+        }
     }
-
+    if (completedTask == totalTask){
+        cleanAC(corePath);
+    }
 }
