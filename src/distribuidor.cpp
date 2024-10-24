@@ -69,7 +69,9 @@ vector<string> interpreteMsg(string msg){
 // corePath es la carpeta temp
 void distributeToCore(string msg, string resultPath = "./data/planificador/resultados.txt" , string corePath = "./data/temporal"){
     vector<string> data = interpreteMsg(msg); //{core, id, operacion, num1, num2}
-    //float result = system(./core msg) //pero deberia de ser system(./core operation num1 num2); core no traduce, solo realiza
+    string command = "./core " + data[2] + " " + data[3] + " " + data[4];
+    // esto es "./core suma 10 1", system(./core operation num1 num2)
+    //float result = system(aki ponele)
     string result = "0"; //mientras aun no está core implementado
     
     // abrimos el archivo para escribir en el (añadiendo, no sobrescribiendo)
