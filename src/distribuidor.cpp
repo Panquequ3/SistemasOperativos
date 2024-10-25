@@ -72,8 +72,16 @@ void distributeToCore(string msg, string resultPath = "./data/planificador/resul
     string command = "./core " + data[2] + " " + data[3] + " " + data[4] + " " + data[0] + " " + corePath;
     // esto es "./core suma 10 1", system(./core operation num1 num2)
     //float result = system(aki ponele)
-    string result = "0"; //mientras aun no está core implementado
-    
+    system(command.c_str());
+
+    string result; //mientras aun no está core implementado
+    ifstream coreResult(corePath+"/"+data[0]+".txt");
+    if(!coreResult){
+        cerr << "No se pudo abrir el archivo "<< corePath+"/"+data[0]+".txt"<<"para la extraccion de la informacion"<<endl;
+        return;
+    }
+    getline(coreResult,result);
+    coreResult.close();
     // abrimos el archivo para escribir en el (añadiendo, no sobrescribiendo)
 
     // pense que los archivos temporales eran para ver la informacion resultante, debido a que si es secuencial, deberiamos traducir lo de system
