@@ -125,7 +125,11 @@ void seleccionMenu(string texto, vector<int> numeros, float numero,string userna
         }
         if(opcion == 9){ // analisis de performance
         //luego de ejecutar el primero, deberia de llamar al python
-        
+        cout << array_threads << endl;
+        string command = "./ejec '" + array_threads + "' " + repeats + " " + store_data_path + 
+                " " +graphic_path + " " + process_path + " " + result_path + " " + 
+                ext_archive + " " + stop_path + " " + temp_path + " " + map_path;
+        system(command.c_str());
         //esto de aca abajo ejecuta el pyhton uwu
         //string compy = "python3 src/graficador.py " + store_data_path + " " + graphic_path + " " + repeats;
         //system(compy)

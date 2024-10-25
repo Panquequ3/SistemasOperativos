@@ -608,3 +608,11 @@
 (0:28;multiplicacion;4,8)=>0
 (0:29;suma;10,8)=>0
 (0:30;resta;10,1)=>0
+(0:1;suma;4,1)=>0
+(1:2;resta;9,7)=>0
+(2:3;division;8,7)=>0
+(3:4;multiplicacion;6,4)=>0
+(4:5;suma;2,9)=>0
+(5:6;resta;3,1)=>0
+(6:7;division;6,5)=>0
+(7:8;multiplicacion;10,8)=>0

@@ -1,0 +1,12 @@
+CC=g++
+CFLAGS=-Wall -std=c++17 -Isrc -Iinclude
+BINS=ejec
+
+all: clean programa
+
+programa:
+	$(CC) $(CFLAGS) -o ejec src/ejecutador.cpp src/mainEjec.cpp
+
+clean:
+	@echo " [CLN] Removing binary files... chao!!"
+	@rm -f $(BINS)

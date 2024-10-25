@@ -77,6 +77,7 @@ void distributeToCore(string msg, string resultPath = "./data/planificador/resul
     // abrimos el archivo para escribir en el (añadiendo, no sobrescribiendo)
 
     // pense que los archivos temporales eran para ver la informacion resultante, debido a que si es secuencial, deberiamos traducir lo de system
+    
     ofstream resultArc(resultPath, ios::app);
 
     if(!resultArc){
@@ -87,6 +88,7 @@ void distributeToCore(string msg, string resultPath = "./data/planificador/resul
     resultArc << msg + "=>" + result << endl;
 
     resultArc.close();
+    /*
     // ----------------- Cambiamos el estado del core utilizado ------------------------------
     ofstream coreArc(corePath + "/" + data[0] + ".txt");
     if(!coreArc){
@@ -96,4 +98,5 @@ void distributeToCore(string msg, string resultPath = "./data/planificador/resul
     coreArc.put('1'); // Cambiamos su estado a ocupado
     coreArc.close();
     // ------------------------------------------------------------------------
+    */
 }
