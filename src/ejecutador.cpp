@@ -6,7 +6,7 @@
 #include "ejecutador.h"
 using namespace std;
 void writeArchive(string dataPath, int thread, double duration){
-    ofstream resultArc(dataPath, ios::app);
+    ofstream resultArc(dataPath);
 
     if(!resultArc){
         cerr << "Error, no se pudo abrir el archivo para escritura" << endl;
