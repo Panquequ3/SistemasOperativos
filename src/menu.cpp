@@ -131,14 +131,14 @@ void seleccionMenu(string texto, vector<int> numeros, float numero,string userna
                 ext_archive + " " + stop_path + " " + temp_path + " " + map_path;
         system(command.c_str());
         //esto de aca abajo ejecuta el pyhton uwu
-        //string compy = "python3 src/graficador.py " + store_data_path + " " + graphic_path + " " + repeats;
-        //system(compy)
-
+        string compy = "python3 src/graficador.py " + store_data_path + " " + graphic_path + " " + repeats;
+        system(compy.c_str());
+        cout << "El grafico fue almacenado en el path " << graphic_path << endl;
         }
         if(opcion == 10){ // planificador
-        //Recuerda que se le pasan datos a algunos uwu z3
             string command = "./plan " + cant_cores + " " + process_core_path + " " + temp_path + " " + result_core_path;
             system(command.c_str());
+            cout << "Los resultados fueron guardados en " << result_core_path<< endl;
         }
 
         if(opcion == 11){

@@ -1,9 +1,11 @@
 import matplotlib.pyplot as plt
 import sys
+import warnings
+warnings.filterwarnings("ignore")
 
 def dataExtract(data_path):
     dic = {}
-    with open(data_path,'w') as data:
+    with open(data_path,'r') as data:
         content = data.readlines()
         for lines in content:
             temp = lines.strip().split(";")
@@ -25,13 +27,12 @@ def main():
     dic = dataExtract(data_path)
     for key in dic.keys():
        keyLabel = key + " Hilos"
-       plt.plot(x,dic[key],label=keylabel)
+       plt.plot(x,dic[key],label=keyLabel)
 
     plt.title('Gráfico de Líneas con Múltiples Series')
     plt.xlabel('Repeticiones')
     plt.ylabel('Tiempo')
     plt.legend()
-    
     plt.savefig(graphic_path)
     
     return 0

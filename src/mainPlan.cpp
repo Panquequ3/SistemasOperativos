@@ -1,4 +1,5 @@
-#include <iostream>  
+#include <iostream> 
+#include <sstream> 
 #include "planificador.h"
 using namespace std;
 
@@ -12,7 +13,12 @@ int main(int argc, char* argv[]){
     string taskPath = argv[2];
     string corePath = argv[3];
     string resultPath = argv[4];
-
+    ofstream temp(resultPath);
+    if(!temp){
+        cerr << "El path de resultados no existe, por favor coloque otro" << endl;
+        exit(EXIT_FAILURE);
+    }
+    temp.close();
     coordinator(numCores, taskPath, corePath, resultPath);
     return 0;
 }

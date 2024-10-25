@@ -29,7 +29,7 @@ palabra palíndromo, hasta evaluar un número en una función específica, esta 
 
 ## Instalacion / Compilacion
 * Para la instalación del programa es necesario con clonar el repositorio, y tambien clonar la [libreria dotenv-cpp](https://github.com/laserpants/dotenv-cpp.git) y añadirla a la carpeta __"external"__ junto con el resto, de lo contrario el .env con las variables de entorno no podran ser leidas correctamente. Asegurate de mantener todos los archivos en las carpetas correctas, en caso de no ejecutarse correctamente, verificar que la ubicación de cada archivo. 
-  > Importante mencionar que se deben compilar 7 programas previamente, el programa principal (con make) y los programas que ejecutan la opción (6), (7), (8), (9) y (10) (con **"make -f MakefileC", "make -f MakefileP" y "make -f MakefileI"** respectivamente)
+  > Importante mencionar que se deben compilar 7 programas previamente, el programa principal (con make) y los programas que ejecutan la opción (6), (7), (8), (9) y (10) (con **"make -f 'nombre_del_archivo_make'" los cuales son MakefileC, MakefileP, MakefileI, MakefileE, MakefilePf, MakefileD y MakefileC** respectivamente)
 * Instalar la libreria __matplotlib__ de python se realiza con pip, utilizando el comando en consola __pip3 install matplotlib__.  
   > Importante mencionar que es principalmente requerido la instalacion de Python3 dentro del subsistema, cualquier uso de otra version se debe modificar dentro del codigo para ejecutar el codigo.
 
@@ -79,6 +79,7 @@ Este programa cuenta con las siguientes funcionalidades:
   * **Creacion de indice:** llama a un programa externo que crea un indice de las palabras que se repiten en los archivos de procesar, siempre y cuando el proceso anterior __Conteo paralelo con threads__ fue llamado antes
 
   * **Analisis de performance:** llama a un programa externo que ejecuta tantas veces como especifique la variable de entorno __"REPEATS"__ el programa de conteo paralelo con una cierta cantidad de threads especificadas como una lista en otra variable de entorno (__"ARRAY_THREADS"__)
+    > Si llegase a ocurrir a aparecer un warning de python durante la ejecucion del programa, no se preocupe, la ejecucion del programa no se vera afectada
 
   * **Planificador:** llama a un programa externo que lee y asigna tareas a ejecutar dentro de un "core" y retornando el resultado de las operaciones dadas en un archivo de texto con el formato **"id;operacion;num1,num2"**
 
@@ -109,11 +110,17 @@ Este programa cuenta con las siguientes funcionalidades:
 * **TEMP_PATH** = Ubicacion en el cual se ubica los elementos temporales generados por la opcion (7) debido a la eliminacion de las stop words y no modificar el archivo original.
 
 * **ARRAY_THREADS** = Arreglo con la cantidad de hilos que se van a ocupar en la opcion (9).
+
 * **REPEATS** = Cantidad de veces que se va a repetir el conteo paralelo en la opcion (9).
+
 * **STORE_DATA_PATH** = Ubicacion del archivo de texto con el formato **"cantidad_threads;tiempo_de_ejecucion"** con los tiempos de cada ejecucion.
+
 * **GRAPHIC_PATH** = Ubicacion del grafico generado por la opcion (9) mostrando el tiempo de ejecucion de una cantidad de hilos contra otras.
+
 * **PROCESS_CORE_PATH** = Ubicacion con las instrucciones a procesar de la opcion (10) para los cores.
+
 * **CANT_CORES** = Cantidad de "cores" que se van a utilizar en la opcion (10).
+
 * **RESULT_CORE_PATH** = Ubicacion con los resultados de las operaciones, mostrando el "core" que lo realizo.
 
 ## Atribucion

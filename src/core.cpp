@@ -26,7 +26,7 @@ float evaluateOperation(string operation, string num1, string num2){
 }
 void writeResult(float result,string path,string core){
     string core_path = path+"/"+core+".txt";
-    ofstream file(path);
+    ofstream file(core_path);
     if(!file.is_open()){
         cout<<"Error al cargar el archivo!!"<<endl;
         exit(EXIT_FAILURE);
