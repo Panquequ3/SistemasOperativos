@@ -95,9 +95,10 @@ void coordinator(int numCores, string tasksPath, string corePath, string resultP
     while (completedTask < totalTask){
         for (int j = 0; j < numCores; j++){    
             string t = listTask[i]; // tomamos una tarea
-            core = findDisp(numCores, corePath); // tomamos un core que la ejecute     
+            core = j;
             if (core != -1 && (completedTask != totalTask)){ // si hay uno disponible, le otorgamos la tarea
                 cout << "core utilizado : " << core << endl;
+            /*
             // --------------------- Cambiamos su estado ------------------------------
                 ofstream coreArc(corePath + "/" + to_string(core) + ".txt");
                 if(!coreArc){
@@ -107,6 +108,7 @@ void coordinator(int numCores, string tasksPath, string corePath, string resultP
                 coreArc.put('0'); // Cambiamos su estado a ocupado
                 coreArc.close();
             // ------------------------------------------------------------------------
+            */
                 string msg = "(" + to_string(core) + ":" + t + ")"; //Suma entre string y un char[2] no sirve, eso ta pasando
                 string command = "./dist '" +  msg + "' '" + resultPath + "' '" + corePath + "'";
                 system(command.c_str());

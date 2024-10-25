@@ -1,0 +1,12 @@
+CC=g++
+CFLAGS=-Wall -std=c++17 -Isrc -Iinclude
+BINS=maindIST
+
+all: clean programa
+
+programa:
+	$(CC) $(CFLAGS) -o core src/mainCore.cpp  src/core.cpp
+
+clean:
+	@echo " [CLN] Removing binary files... chao!!"
+	@rm -f $(BINS)
