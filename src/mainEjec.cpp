@@ -36,8 +36,6 @@ int main(int argc, char* argv[]){
             aux = "";
         }
     }
-    //string cmd =  "./data/paralelo/procesar ./data/paralelo/resultados txt ./data/paralelo/stop_word.txt ./data/temporal ./data/map.txt";
-	// cout << "Error. Debe ejecutarse como ./paralelo nHilos pathP pathR extension pathStopWord pathTemp mapPath" << endl;
     
     for(int thread : threads){
         ejecute(thread, cmd, repeats, dataOutput);

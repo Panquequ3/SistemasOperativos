@@ -22,24 +22,28 @@ void ejecute(int thread, string cmd, int repeats, string dataPath){
     double duration;
 
     string command = "./paralelo " + to_string(thread) + " " + cmd;
-    for(int i = 0; i < repeats; i++){
-        cout << "cantidad de hilos usados: " << thread << endl;
+    if(repeats >= 2){    
+        for(int i = 0; i < repeats; i++){
+            cout << "cantidad de hilos usados: " << thread << endl;
 
-        // inicio de la medición
-        auto start = chrono::high_resolution_clock::now();
+            // inicio de la medición
+            auto start = chrono::high_resolution_clock::now();
 
-        system(command.c_str());
+            system(command.c_str());
 
-        // para finalizar el tiempo de medición
-        auto end = chrono::high_resolution_clock::now();
+            // para finalizar el tiempo de medición
+            auto end = chrono::high_resolution_clock::now();
 
-        // calculamos la duración
-        // chrono::duration -> representa un intervalo de tiempo , definte <tipoDato, unidadTiempo>
-        chrono::duration<double> dur = end - start;
-        duration = dur.count();
+            // calculamos la duración
+            // chrono::duration -> representa un intervalo de tiempo , definte <tipoDato, unidadTiempo>
+            chrono::duration<double> dur = end - start;
+            duration = dur.count();
 
-        writeArchive(dataPath, thread, duration);
-        cout << "La duración fue " << duration << " [s] " <<  endl;
+            writeArchive(dataPath, thread, duration);
+            cout << "La duración fue " << duration << " [s] " <<  endl;
+        }
+    }else{
+        cout << "el numero de repeticiones debe ser mayor o igual que 2, vuelva a intentarlo" << endl;
     }
         
 }
