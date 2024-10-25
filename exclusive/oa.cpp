@@ -8,5 +8,6 @@ int main(){
     system("make -f MakefilePf");
     system("make -f MakefileD");
     system("make -f MakefileCore");
+    system("make -f MakefileE");
     return 0;
 }
