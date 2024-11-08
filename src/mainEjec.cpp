@@ -40,5 +40,5 @@ int main(int argc, char* argv[]){
     for(int thread : threads){
         ejecute(thread, cmd, repeats, dataOutput);
     }
-
+    return 0;
 }

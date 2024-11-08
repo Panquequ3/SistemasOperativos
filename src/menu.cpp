@@ -33,10 +33,11 @@ void imprimeMenu(int rol){
     cout << "8) creación indice invertido" << endl;
     cout << "9) análisis de performance" << endl;
     cout << "10) planificador" << endl;
+    cout << "11) Buscador" << endl;
     if(rol==2){
-        cout << "11) Añadir un usuario" << endl;
-        cout << "12) Lista de usuarios" << endl;
-        cout << "13) Eliminar un usuario" << endl;
+        cout << "12) Añadir un usuario" << endl;
+        cout << "13) Lista de usuarios" << endl;
+        cout << "14) Eliminar un usuario" << endl;
     }
     cout << "  <<-------------------->>\n" << endl;
 }
@@ -68,7 +69,7 @@ void seleccionMenu(string texto, vector<int> numeros, float numero,string userna
     while (true){
         //.fail() capta si hay algun ingreso que genere error, en este caso que se ingrese algo que no es un numero
         //esta entrada fallida queda en un buffer
-        while (cin.fail() || opcion < 0 || (opcion > 10+moreoptions)) { 
+        while (cin.fail() || opcion < 0 || (opcion > 11+moreoptions)) { 
             cin.clear(); // Limpiar el estado de error del ingreso (reestablece el estado de cin)
             cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Ignora la entrada no válida (descarta lo que hay en el buffer)
             cout << "La opción ingresada no existe, por favor escoja una opción válida: ";
@@ -140,8 +141,11 @@ void seleccionMenu(string texto, vector<int> numeros, float numero,string userna
             system(command.c_str());
             cout << "Los resultados fueron guardados en " << result_core_path<< endl;
         }
-
         if(opcion == 11){
+            // string command = "./buscador " ;
+            // system(command.c_str());
+        }
+        if(opcion == 12){
             string temp_usr = "",temp_psw,temp_rol;
             
             cout<<endl<<"Nombre de usuario: ";
@@ -159,10 +163,10 @@ void seleccionMenu(string texto, vector<int> numeros, float numero,string userna
             
             addUser(temp_usr,temp_psw,temp_rol,user_path);
         }
-        if(opcion == 12){
+        if(opcion == 13){
             showUser(user_path);
         }
-        if(opcion == 13){
+        if(opcion == 14){
             string temp_usr = "";
             do{
                 cout<<endl<<"Ingrese usuario a eliminar: ";
