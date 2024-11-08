@@ -1,7 +1,10 @@
 #include <iostream>  
 #include <vector>
 #include <string>
+#include <map>
 #include "cache.h"
+#include <queue> // Para la cola de lineas
+#include <unordered_map>
 #include <sys/socket.h>
 
 using namespace std;
@@ -19,55 +22,51 @@ void receiveMessages(int clientSocket) {
     }
 }
 
-// Encuentra el indice del primer simbolo que encuentre en el str
-int findIndex(string str, char simb){
-    int i = 0;
-    for(char car : str){
-        if(car == simb)
-            return i 
-        i++;
-    }
-}
 
 // Recibe "la solicitud", y busca en la cache o envia solicitud al motor de busqueda
 // de ser necesario
-string cache(vector<string> cache, string lineToIn, int cacheSize){
-
-    int search = searchOnCache(cache, lineToIn, actualSize);
+// cache <message, answer>, cacheAux[message]
+string cache(queue<string> cacheAux, unordered_map<string, string> cache, string message, int cacheSize){
+    int search = searchOnCache(cache, message);
     string answer;
     // Si no la encuentra, se comunica con el motor de busqueda
     if (search == -1) {  
         string searchAnswer; // = -respuesta del motor de busqueda-
-        writeCache(cache, lineToIn, searchAnswer);
-        answer = searchAnswer;
+        answer = searchAnswer; 
+        writeCache(cacheAux, cache, answer, message, cacheSize);
     } else{
-        answer = cache[search];
+        answer = cache.at(message);
     }
     return answer;
 }
 
-// Busca la palabra en cache, si la encuentra retorna el indice, si no -1
-int searchOnCache(vector<string> cache, string lineToIn, int size){
-    for(int i = 0; i < size; i++){
-        int index = findIndex(cache[i], ';');
-        string line = cache[i].substr(0, i);
-        if(lineToIn == line)
-            return i;
+// Busca la palabra en cache, si la encuentra retorna 1, si no -1
+int searchOnCache(unordered_map<string, string> cache, string message){
+    auto result = cache.at(message);
+    if (result != cache.end()) {
+        return 1; // frase encontrada
+    } else {
+        return -1; // frase no encontrada
     }
-    cout << "frase no encontrada, enviar solicitud a motor de busqueda" << endl;
-    return -1;
 }
 
 // Escribe los resultados en la cache, si esta está llena entonces elimina la
 // busqueda más antigua y añade la nueva
-void writeCache(vector<string> cache, string searchAnswer, int cacheSize){
+void writeCache(queue<string>& cacheAux, unordered_map<string, string>& cache, string answer, string message, int cacheSize){
     int actualSize = cache.size(); // Cuan llena está la cache actualmente
-    
-    if (cacheSize == actualSize) {
-        cache.erase(cache.begin());  // Elimina la busqueda más antigua
-        cache.push_back(searchAnswer); // Añade la busqueda mas reciente
-    } else{
-        cache.push_back(searchAnswer); // Añade la busqueda mas reciente
-    }
+    string lastSearch; // Para almacenar busqueda más vieja
 
+    // Si el caché está lleno entonces eliminamos el mas viejo
+    if (cacheSize == actualSize) {
+        lastSearch = cacheAux.front(); // Guardamos la busqueda más vieja para más tarde
+
+        cacheAux.pop(); // Elimina la busqueda más antigua del auxiliar
+        cache.erase(lastSearch); // Elimina la busqueda más antigua en el caché
+
+        cacheAux.push(message); // Añade la busqueda mas reciente al auxiliar
+        cache[message] = answer; // Añade la busqueda mas reciente al caché
+    } else{ // si no, añadimos la busqueda mas reciente
+        cacheAux.push(message); 
+        cache[message] = answer;
+    }
 }

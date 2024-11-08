@@ -28,7 +28,7 @@ int main(int argc, char* argv[]){
     }   
     // Configurar la dirección del servidor
     memset(&serverAddr, 0, sizeof(serverAddr));
-    serverAddr.sin_family = AF_INET;
+    serverAddr.sin_family = AF_UNIX;
     serverAddr.sin_port = htons(12345); // Puerto del servidor
     serverAddr.sin_addr.s_addr = inet_addr("127.0.0.1"); // Dirección IP del servidor
 
