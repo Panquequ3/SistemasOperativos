@@ -10,14 +10,15 @@
 using namespace std;
 
 // Busca la palabra en cache, si la encuentra retorna 1, si no -1
-int searchOnCache(unordered_map<string, string> cache, string message){
-    auto result = cache.at(message);
+int searchOnCache(const unordered_map<string, string>& cache, const string& message) {
+    auto result = cache.find(message);
     if (result != cache.end()) {
         return 1; // frase encontrada
     } else {
         return -1; // frase no encontrada
     }
 }
+
 
 // Escribe los resultados en la cache, si esta está llena entonces elimina la
 // busqueda más antigua y añade la nueva

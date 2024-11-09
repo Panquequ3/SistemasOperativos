@@ -9,6 +9,7 @@
 #include <queue>
 #include <unistd.h> 
 #include <cstring> 
+#include <atomic>
 #include <sys/un.h>
 
 using namespace std;
@@ -50,8 +51,7 @@ void handleClient(int client_fd) {
     }
 
     dotenv::init();
-    string memo_size = dotenv::getenv(mem_size.c_str());
-    int memory_size = atoi(memo_size);
+    int memory_size = atoi(dotenv::getenv(mem_size.c_str()).c_str());
     unordered_map<string, string> cache; // inicializamos el cache
     queue<string> cacheAux;
 
@@ -73,7 +73,8 @@ void handleClient(int client_fd) {
             break;
         }
         //aqui se comprueba que si no esta en memoria procesarlo
-        if (searchOnCache(message)==-1) {
+        string answer;
+        if (searchOnCache(cache,message)==-1) {
             // Enviar el mensaje al servidor final
             send(server_fd, buffer, bytesRead, 0);
 
@@ -87,7 +88,7 @@ void handleClient(int client_fd) {
             cout << "Intermediario recibió del Servidor Final: " << buffer << endl;
             //aqui debe almacenarlo
             answer.assign(buffer); 
-            writeCache(cacheAux, cache, answer, message, cacheSize);
+            writeCache(cacheAux, cache, answer, message, memory_size);
             // Enviar la respuesta del servidor final al cliente
             send(client_fd, buffer, bytesRead, 0);
         } else {
