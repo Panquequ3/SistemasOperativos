@@ -5,6 +5,7 @@
 #include <sstream>
 #include <map>
 #include <vector>
+#include <algorithm>
 #include "motorBusqueda.h"
 
 using namespace std;
@@ -62,11 +63,10 @@ string getCoincidence(vector<vector<string>> results,int topk){
     vector<pair<string,int>> temp;
     vector<string> aux = results[0];
     int cant = 0;
-    int cant_vect = results.size() - 1;
     string str = "";
     for(string i:aux){
         cant = extractCant(i);
-        for(int j = 1; j<results.size();j++){
+        for(size_t j = 1; j<results.size();j++){
             for(string k:results[j]){
                 if(extractId(i).compare(extractId(k))){
                     cant+= extractCant(k);
@@ -79,11 +79,10 @@ string getCoincidence(vector<vector<string>> results,int topk){
     }
     if(temp.empty()) return "E! Ningun libro con la palabra";
 
-    sort(temp.begin(), temp.end(), [](const auto& a, const auto& b) {
-        return a.second > b.second;
-    });
+    sort(temp.begin(), temp.end(), [](const auto& a, const auto& b) { return a.second > b.second; });
+    size_t topk_temp = topk;
     str+="("+temp[0].first+","+to_string(temp[0].second)+")";
-    for(int i = 1; i!= topk && i<=temp.size();i++){
+    for(size_t i = 1; i!= topk_temp && i<=temp.size();i++){
         str+=";("+temp[i].first+","+to_string(temp[i].second)+")";
     }
     return str;
@@ -92,7 +91,6 @@ string getCoincidence(vector<vector<string>> results,int topk){
 string getWords(map<string,vector<string>> index_words, string word,int topk){
     vector<string> words;
     vector<string> repeats;
-    size_t start,end;
     istringstream iss(word);
     string aux;
     while(iss>>aux){

@@ -76,7 +76,7 @@ void startFinalServer() {
             break;
         }
         message.assign(buffer);
-        string response = getCoincidence(index,message,topk);
+        string response = getWords(index,message,topk);
         write(client_fd, response.c_str(), response.size());
     }
 
