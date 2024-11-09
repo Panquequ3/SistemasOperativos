@@ -6,6 +6,7 @@
 #include <unistd.h>
 #include <cstring>
 #include "motorBusqueda.h"
+#include "buscador.h"
 
 
 using namespace std;
@@ -61,8 +62,8 @@ void startClient(string map_path, string outputWord = "SALIR AHORA") {
         if (bytesRead > 0) {
             cout << "Cliente recibió del Intermediario: " << buffer << endl;
             string answer;
-            answer.asing(buffer); // respuesta que recibe del cache
-            vector<string> results = translate(answer, map_path);
+            answer.assign(buffer); // respuesta que recibe del cache
+            vector<string> results =translateA(answer, map_path);
             printResults(results);
         }
 
@@ -90,7 +91,7 @@ vector<string> split(string str){
         if(str[i] != ';'){
             aux += str[i];
         } else{
-            valores.push_back(valor);
+            valores.push_back(aux);
             aux = "";
         }
     }
@@ -130,7 +131,7 @@ string searchOnMap(string mapPath, string id) {
 }
 
 // Traduce la respuesta y los guarda en un vector
-vector<string> translate(string answer, string mapPath){
+vector<string>translateA(string answer, string mapPath){
     vector<string>results;
     int score, position = 1;
     string book, id;
