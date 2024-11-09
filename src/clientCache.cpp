@@ -7,44 +7,36 @@
 #include <laserpants/dotenv/dotenv.h>
 #include <unordered_map>
 #include <queue>
-#include <unistd.h> 
-#include <cstring> 
+#include <unistd.h>
+#include <cstring>
 #include <atomic>
-#include <sys/un.h>
 
 using namespace std;
-const string CLIENT_SOCKET_PATH = "./data/socket/socket_11"; 
-const string SERVER_SOCKET_PATH = "./data/socket/socket_11_2";
+
+const int INTERMEDIARY_PORT = 9090; // Puerto para el intermediario que los clientes utilizarán
+const int SERVER_PORT = 8080; // Puerto para el servidor final
 const string mem_size = "MEMORY_SIZE";
 
 atomic<bool> running(true);
-// El servidor es el programa o proceso que espera las solicitudes de los 
-// clientes. Su función principal es escuchar conexiones entrantes y procesar
-// las solicitudes de los clientes. Una vez que recibe una solicitud, 
-// el servidor realiza la acción correspondiente (por ejemplo, devolver
-// información o procesar datos) y luego envía la respuesta al cliente.
-
-// El cliente es el programa o proceso que inicia una conexión con el servidor. 
-// Su tarea es ENVIAR SOLICITUDES al servidor y recibir respuestas. 
-// En otras palabras, el cliente solicita un servicio o recurso del servidor.
 
 void handleClient(int client_fd) {
-    sockaddr_un address;
+    sockaddr_in server_address;
     char buffer[1048] = {0};
 
     // Crear el socket para el servidor final
-    int server_fd = socket(AF_UNIX, SOCK_STREAM, 0);
+    int server_fd = socket(AF_INET, SOCK_STREAM, 0);
     if (server_fd < 0) {
         cerr << "Error al crear el socket del intermediario para el servidor final" << endl;
         close(client_fd);
         return;
     }
 
-    address.sun_family = AF_UNIX;
-    strncpy(address.sun_path, SERVER_SOCKET_PATH.c_str(), sizeof(address.sun_path) - 1);
+    server_address.sin_family = AF_INET;
+    server_address.sin_addr.s_addr = inet_addr("127.0.0.1"); // Dirección del servidor final
+    server_address.sin_port = htons(SERVER_PORT);
 
-    if (connect(server_fd, (struct sockaddr*)&address, sizeof(address)) < 0) {
-        cerr << "Error al conectar con el servidor final" << endl;
+    if (connect(server_fd, (struct sockaddr*)&server_address, sizeof(server_address)) < 0) {
+        perror("Error al conectar con el servidor final");
         close(client_fd);
         close(server_fd);
         return;
@@ -52,7 +44,7 @@ void handleClient(int client_fd) {
 
     dotenv::init();
     int memory_size = atoi(dotenv::getenv(mem_size.c_str()).c_str());
-    unordered_map<string, string> cache; // inicializamos el cache
+    unordered_map<string, string> cache; // Inicializamos el caché
     queue<string> cacheAux;
 
     while (running) {
@@ -72,9 +64,9 @@ void handleClient(int client_fd) {
             running = false;
             break;
         }
-        //aqui se comprueba que si no esta en memoria procesarlo
+        // Aquí se comprueba que si no está en memoria procesarlo
         string answer;
-        if (searchOnCache(cache,message)==-1) {
+        if (searchOnCache(cache, message) == -1) {
             // Enviar el mensaje al servidor final
             send(server_fd, buffer, bytesRead, 0);
 
@@ -86,13 +78,13 @@ void handleClient(int client_fd) {
             }
 
             cout << "Intermediario recibió del Servidor Final: " << buffer << endl;
-            //aqui debe almacenarlo
-            answer.assign(buffer); 
+            // Aquí debe almacenarlo
+            answer.assign(buffer);
             writeCache(cacheAux, cache, answer, message, memory_size);
             // Enviar la respuesta del servidor final al cliente
             send(client_fd, buffer, bytesRead, 0);
         } else {
-            // Aqui busca la respuesta al mensaje
+            // Aquí busca la respuesta al mensaje
             // Enviar una respuesta directa al cliente
             string respuesta = cache.at(message);
             send(client_fd, respuesta.c_str(), respuesta.size(), 0);
@@ -105,42 +97,50 @@ void handleClient(int client_fd) {
 
 void startIntermediaryServer() {
     int server_fd, client_fd;
-    sockaddr_un address;
+    sockaddr_in address;
+    int opt = 1;
+    int addrlen = sizeof(address);
 
-    server_fd = socket(AF_UNIX, SOCK_STREAM, 0);
-    if (server_fd < 0) {
-        cerr << "Error al crear el socket del intermediario" << endl;
-        return;
+    server_fd = socket(AF_INET, SOCK_STREAM, 0);
+    if (server_fd == 0) {
+        perror("Error al crear el socket del intermediario");
+        exit(EXIT_FAILURE);
     }
 
-    address.sun_family = AF_UNIX;
-    strncpy(address.sun_path, CLIENT_SOCKET_PATH.c_str(), sizeof(address.sun_path) - 1);
-
-    unlink(CLIENT_SOCKET_PATH.c_str());
-    if (bind(server_fd, (struct sockaddr*)&address, sizeof(address)) < 0) {
-        cerr << "Error en bind" << endl;
+    // Opción para reutilizar la dirección y puerto
+    if (setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &opt, sizeof(opt))) {
+        perror("Error en setsockopt");
         close(server_fd);
-        return;
+        exit(EXIT_FAILURE);
+    }
+
+    address.sin_family = AF_INET;
+    address.sin_addr.s_addr = inet_addr("127.0.0.1"); // Dirección del intermediario
+    address.sin_port = htons(INTERMEDIARY_PORT);
+
+    if (bind(server_fd, (struct sockaddr*)&address, sizeof(address)) < 0) {
+        perror("Error en bind");
+        close(server_fd);
+        exit(EXIT_FAILURE);
     }
 
     if (listen(server_fd, 5) < 0) {
-        cerr << "Error en listen" << endl;
+        perror("Error en listen");
         close(server_fd);
-        return;
+        exit(EXIT_FAILURE);
     }
 
-    cout << "Intermediario iniciado en " << CLIENT_SOCKET_PATH << endl;
+    cout << "Intermediario iniciado en el puerto " << INTERMEDIARY_PORT << endl;
 
     // Aceptar conexiones del cliente
-    while (running && (client_fd = accept(server_fd, nullptr, nullptr)) >= 0) {
+    while (running && (client_fd = accept(server_fd, (struct sockaddr*)&address, (socklen_t*)&addrlen)) >= 0) {
         std::thread(handleClient, client_fd).detach();
     }
 
     close(server_fd);
-    unlink(CLIENT_SOCKET_PATH.c_str());
 }
 
-int main(int argc, char* argv[]){
+int main(int argc, char* argv[]) {
     startIntermediaryServer();
     return 0;
 }
