@@ -1,0 +1,12 @@
+CC = g++
+CFLAGS = -Wall -std=c++17 -Iexternal/dotenv-cpp/include -Isrc -Iinclude
+EXEC = servidor_final
+
+all: clean programa
+
+programa:
+    $(CC) $(CFLAGS) -o $(EXEC) src/servidor_final.cpp src/motorBusqueda.cpp
+
+clean:
+    @echo " [CLN] Removing binary files... chao!!"
+    @rm -f $(EXEC)
