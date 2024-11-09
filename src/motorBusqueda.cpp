@@ -82,7 +82,8 @@ string getCoincidence(vector<vector<string>> results,int topk){
     sort(temp.begin(), temp.end(), [](const auto& a, const auto& b) {
         return a.second > b.second;
     });
-    for(int i = 0; i!= topk && i<=temp.size();i++){
+    str+="("+temp[0].first+","+to_string(temp[0].second)+")";
+    for(int i = 1; i!= topk && i<=temp.size();i++){
         str+=";("+temp[i].first+","+to_string(temp[i].second)+")";
     }
     return str;

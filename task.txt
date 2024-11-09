@@ -1,0 +1,241 @@
+-- codigo de cliente AKA la interfaz--
+#include <iostream>
+#include <sys/socket.h>
+#include <sys/un.h>
+#include <unistd.h>
+#include <cstring>
+
+using namespace std;
+
+const string INTERMEDIARY_SOCKET_PATH = "./data/socket/socket_11";
+
+void startClient() {
+    int client_fd;
+    sockaddr_un address;
+    char buffer[1048] = {0};
+
+    client_fd = socket(AF_UNIX, SOCK_STREAM, 0);
+    if (client_fd < 0) {
+        cerr << "Error al crear el socket del cliente" << endl;
+        return;
+    }
+
+    address.sun_family = AF_UNIX;
+    strncpy(address.sun_path, INTERMEDIARY_SOCKET_PATH.c_str(), sizeof(address.sun_path) - 1);
+
+    if (connect(client_fd, (struct sockaddr*)&address, sizeof(address)) < 0) {
+        cerr << "Error al conectar con el intermediario" << endl;
+        close(client_fd);
+        return;
+    }
+    
+    //aqui va la definicion de cosas dentro de la interfaz si llegase a ser necesario
+
+    string message;
+    while (true) {
+        //aqui se imprime el mensaje de la interfaz (parte visual)
+        cout << "Ingrese mensaje para enviar al intermediario (o 'salir' para terminar): ";
+        //modificar el cout por el que tiene la interfaz
+        getline(cin, message);
+        //Cambiar el mensaje de salida y mandarle el mensaje de salida tambien a los otros
+        if (message == "salir") {
+            break;
+        }
+
+        // Enviar mensaje al intermediario (AKA cache)
+        send(client_fd, message.c_str(), message.size(), 0);
+
+        // Leer la respuesta del intermediario
+        memset(buffer, 0, sizeof(buffer));
+        int bytesRead = read(client_fd, buffer, sizeof(buffer) - 1);
+        if (bytesRead > 0) {
+            cout << "Cliente recibió del Intermediario: " << buffer << endl;
+            //(aqui imprime el mensaje)
+        }
+        // aqui se podria hacer un clean para que sea mas facil la visualizacion
+    }
+
+    close(client_fd);
+}
+
+//Solo se ejecuta el startClient en main
+
+-- fin condigo cliente --
+
+--codigo intermidiario AKA interfaz--
+
+void handleClient(int client_fd) {
+    sockaddr_un address;
+    char buffer[1048] = {0};
+
+    // Crear el socket para el servidor final
+    int server_fd = socket(AF_UNIX, SOCK_STREAM, 0);
+    if (server_fd < 0) {
+        cerr << "Error al crear el socket del intermediario para el servidor final" << endl;
+        close(client_fd);
+        return;
+    }
+
+    address.sun_family = AF_UNIX;
+    strncpy(address.sun_path, SERVER_SOCKET_PATH.c_str(), sizeof(address.sun_path) - 1);
+
+    if (connect(server_fd, (struct sockaddr*)&address, sizeof(address)) < 0) {
+        cerr << "Error al conectar con el servidor final" << endl;
+        close(client_fd);
+        close(server_fd);
+        return;
+    }
+
+    //aqui se cargan datos que puedan ser necesarios para cache (como definir las variables)
+
+    while (running) {
+        memset(buffer, 0, sizeof(buffer));
+        int bytesRead = read(client_fd, buffer, sizeof(buffer) - 1);
+
+        if (bytesRead <= 0) {
+            break;
+        }
+
+        cout << "Intermediario recibió del Cliente: " << buffer << endl;
+
+        string message(buffer);
+
+        if (strcmp(buffer, "SALIR_AHORA") == 0) {
+            running = false;
+            break;
+        }
+        //aqui se comprueba que si no esta en memoria procesarlo
+        if (shouldSendToFinalServer(message)) {
+            // Enviar el mensaje al servidor final
+            send(server_fd, buffer, bytesRead, 0);
+
+            // Leer la respuesta del servidor final
+            memset(buffer, 0, sizeof(buffer));
+            bytesRead = read(server_fd, buffer, sizeof(buffer) - 1);
+            if (bytesRead <= 0) {
+                break;
+            }
+
+            cout << "Intermediario recibió del Servidor Final: " << buffer << endl;
+            //aqui debe almacenarlo
+            // Enviar la respuesta del servidor final al cliente
+            send(client_fd, buffer, bytesRead, 0);
+        } else {
+            // Aqui busca la respuesta al mensaje
+            // Enviar una respuesta directa al cliente
+            string respuesta = "Respuesta directa del Intermediario";
+            send(client_fd, respuesta.c_str(), respuesta.size(), 0);
+        }
+    }
+
+    close(client_fd);
+    close(server_fd);
+}
+
+//solo se ejecuta en main la startIntermediaryServer y era
+--fin intermediario--
+
+-- codigo server final AKA motor de busqueda--
+#include <iostream>
+#include <sys/socket.h>
+#include <sys/un.h>
+#include <unistd.h>
+#include <cstring>
+
+using namespace std;
+
+const string SOCKET_PATH = "./data/socket/socket_11_2";
+
+void startFinalServer() {
+    int server_fd, client_fd;
+    sockaddr_un address;
+    char buffer[1048] = {0};
+
+    // Crear el socket
+    server_fd = socket(AF_UNIX, SOCK_STREAM, 0);
+    if (server_fd < 0) {
+        cerr << "Error al crear el socket del servidor final" << endl;
+        return;
+    }
+
+    address.sun_family = AF_UNIX;
+    strncpy(address.sun_path, SOCKET_PATH.c_str(), sizeof(address.sun_path) - 1);
+
+    unlink(SOCKET_PATH.c_str());
+    if (bind(server_fd, (struct sockaddr*)&address, sizeof(address)) < 0) {
+        cerr << "Error en bind" << endl;
+        close(server_fd);
+        return;
+    }
+
+    if (listen(server_fd, 5) < 0) {
+        cerr << "Error en listen" << endl;
+        close(server_fd);
+        return;
+    }
+
+    cout << "Servidor final iniciado en " << SOCKET_PATH << endl;
+
+    // Aceptar la conexión del cliente
+    client_fd = accept(server_fd, nullptr, nullptr);
+    if (client_fd < 0) {
+        cerr << "Error al aceptar conexión" << endl;
+        close(server_fd);
+        return;
+    }
+
+    // aqui se carga todo lo del main actual del motor
+
+    while (true) {
+        memset(buffer, 0, sizeof(buffer));
+        int bytesRead = read(client_fd, buffer, sizeof(buffer) - 1);
+        if (bytesRead <= 0) {
+            break;
+        }
+
+        cout << "Servidor final recibió: " << buffer << endl;
+
+        // Salir si el mensaje es "SALIR_AHORA"
+        if (strcmp(buffer, "SALIR_AHORA") == 0) {
+            cout << "Servidor final cerrando conexión" << endl;
+            break;
+        }
+
+        // Responder al cliente
+        // aqui se usa el metodo
+        string response = "Respuesta del Servidor Final";
+        write(client_fd, response.c_str(), response.size());
+    }
+
+    close(client_fd);
+    close(server_fd);
+    unlink(SOCKET_PATH.c_str());
+}
+
+--fin codigo server--
+
+
+--Este es el makefile que necesita el cache en la parte de sockets
+# Nombre del compilador
+CC = g++
+
+# Opciones de compilación
+CFLAGS = -Wall -std=c++17 -pthread
+
+# Archivos fuente y el nombre del ejecutable
+SRC = intermediario.cpp #Recuerda cambiar nombres
+OBJ = intermediario.o
+EXEC = intermediario
+
+# Regla para compilar el ejecutable
+$(EXEC): $(OBJ)
+    $(CC) $(CFLAGS) -o $(EXEC) $(OBJ)
+
+# Regla para compilar el archivo objeto
+$(OBJ): $(SRC)
+    $(CC) $(CFLAGS) -c $(SRC)
+
+# Limpiar archivos compilados
+clean:
+    rm -f $(OBJ) $(EXEC)
+---- Capaz falte agregar las cosas extra, pero eso es lo de menos :p
