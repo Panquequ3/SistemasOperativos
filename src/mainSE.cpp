@@ -3,8 +3,11 @@
 #include <cstdlib>
 #include <fstream>
 #include <sstream>
+#include <sys/types.h>
+#include <netinet/in.h>
 #include <sys/socket.h>
 #include <sys/un.h>
+#include <sys/stat.h>
 #include <unistd.h>
 #include <cstring>
 #include <map>
@@ -33,11 +36,19 @@ void startFinalServer() {
     address.sun_family = AF_UNIX;
     strncpy(address.sun_path, SOCKET_PATH.c_str(), sizeof(address.sun_path) - 1);
 
-    unlink(SOCKET_PATH.c_str());
-    if (bind(server_fd, (struct sockaddr*)&address, sizeof(address)) < 0) {
-        cerr << "Error en bind" << endl;
-        close(server_fd);
-        return;
+    string directory = "./data/socket/";
+     if (access(directory.c_str(), F_OK) == -1) { 
+        perror("Directorio no existe, creándolo"); 
+        if (mkdir(directory.c_str(), 0755) == -1) { 
+            perror("Error al crear el directorio"); close(server_fd); 
+            return; 
+        } 
+    } // Eliminar el socket existente si ya existe
+    unlink(SOCKET_PATH.c_str()); 
+    if (bind(server_fd, (struct sockaddr*)&address, sizeof(address)) < 0) { 
+        perror("Error en bind"); 
+        close(server_fd); 
+        return; 
     }
 
     if (listen(server_fd, 5) < 0) {
