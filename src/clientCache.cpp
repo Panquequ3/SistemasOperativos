@@ -5,11 +5,18 @@
 #include <sys/socket.h>
 #include <thread>
 #include <laserpants/dotenv/dotenv.h>
-using namespace std;
+#include <unordered_map>
+#include <queue>
+#include <unistd.h> 
+#include <cstring> 
+#include <sys/un.h>
 
+using namespace std;
+const string CLIENT_SOCKET_PATH = "./data/socket/socket_11"; 
+const string SERVER_SOCKET_PATH = "./data/socket/socket_11_2";
 const string mem_size = "MEMORY_SIZE";
 
-
+atomic<bool> running(true);
 // El servidor es el programa o proceso que espera las solicitudes de los 
 // clientes. Su función principal es escuchar conexiones entrantes y procesar
 // las solicitudes de los clientes. Una vez que recibe una solicitud, 
@@ -43,7 +50,8 @@ void handleClient(int client_fd) {
     }
 
     dotenv::init();
-    int memory_size = atoi(dotenv::getenv(mem_size.c_str()));
+    string memo_size = dotenv::getenv(mem_size.c_str());
+    int memory_size = atoi(memo_size);
     unordered_map<string, string> cache; // inicializamos el cache
     queue<string> cacheAux;
 

@@ -4,8 +4,8 @@ EXEC = cache
 
 all: clean programa
 programa:
-    $(CC) $(CFLAGS) -o $(EXEC) src/clientCache.cpp src/cache.cpp
-
+	$(CC) $(CFLAGS) -o $(EXEC) src/clientCache.cpp src/cache.cpp
+	
 clean:
-    @echo " [CLN] Removing binary files... chao!!"
-    @rm -f $(EXEC)
+	@echo " [CLN] Removing binary files... chao!!"
+	@rm -f $(EXEC)
