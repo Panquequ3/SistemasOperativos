@@ -9,4 +9,4 @@ void searcher(string outputWord);
 void printResults(vector<string> vec);
 vector<string> split(string str);
 string searchOnMap(string mapPath, string id);
-string translate(string answer, string mapPath);
+vector<string> translateA(string answer, string mapPath);
