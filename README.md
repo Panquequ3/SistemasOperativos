@@ -29,9 +29,9 @@ palabra palíndromo, hasta evaluar un número en una función específica, esta 
 
 ## Instalacion / Compilacion
 * Para la instalación del programa es necesario con clonar el repositorio, y tambien clonar la [libreria dotenv-cpp](https://github.com/laserpants/dotenv-cpp.git) y añadirla a la carpeta __"external"__ junto con el resto, de lo contrario el .env con las variables de entorno no podran ser leidas correctamente. Asegurate de mantener todos los archivos en las carpetas correctas, en caso de no ejecutarse correctamente, verificar que la ubicación de cada archivo. 
-  > Importante mencionar que se deben compilar 7 programas previamente, el programa principal (con make) y los programas que ejecutan la opción (6), (7), (8), (9) y (10) (con **"make -f 'nombre_del_archivo_make'" los cuales son MakefileC, MakefileP, MakefileI, MakefileE, MakefilePf, MakefileD y MakefileC** respectivamente)
+  > Importante mencionar que se deben compilar 7 programas previamente, el programa principal (con make) y los programas que ejecutan la opción (6), (7), (8), (9), (10) y (11) (con **"make -f 'nombre_del_archivo_make'" los cuales son MakefileC, MakefileP, MakefileI, MakefileE, MakefilePf, MakefileD, MakefileC, MakeInterface, MakeCache y MakeMotor** respectivamente)
 * Instalar la libreria __matplotlib__ de python se realiza con pip, utilizando el comando en consola __pip3 install matplotlib__.  
-  > Importante mencionar que es principalmente requerido la instalacion de Python3 dentro del subsistema, cualquier uso de otra version se debe modificar dentro del codigo para ejecutar el codigo.
+  > Importante mencionar que es principalmente requerido la instalacion de Python3 dentro del subsistema, cualquier uso de otra version se debe modificar dentro del codigo para ejecutar el programa.
 
 ## Ejecucion
 
@@ -83,6 +83,9 @@ Este programa cuenta con las siguientes funcionalidades:
 
   * **Planificador:** llama a un programa externo que lee y asigna tareas a ejecutar dentro de un "core" y retornando el resultado de las operaciones dadas en un archivo de texto con el formato **"id;operacion;num1,num2"**
 
+  * **Buscador:** Llama a un programa externo que trabaja mediante sockets para poder realizar una busqueda en el archivo creado anteriormente y encontrar la cantidad de veces que un grupo de palabra es encontrado dentro del index.
+    > Para la ejecucion de esta opcion es necesario ejecutar cache y motorBusqueda en otros terminales, siendo primero el motor y luego el cache.
+
   * **Añadir un usuario :** A los usuarios de tipo Admin, le permite añadir usuarios, con la condicion de que estos no estean repetidos.  
   Para añadir un usuario general, sin acceso a funciones del Administrador, se debe ingresar en la parte de __"Rol: "__ el valor __Usuario__, en caso de querer agregar un Administrador nuevo dentro de la base de datos, se coloca __"Admin"__
   
@@ -122,6 +125,12 @@ Este programa cuenta con las siguientes funcionalidades:
 * **CANT_CORES** = Cantidad de "cores" que se van a utilizar en la opcion (10).
 
 * **RESULT_CORE_PATH** = Ubicacion con los resultados de las operaciones, mostrando el "core" que lo realizo.
+
+* **TOPK** = Cantidad de valores que se van a mostrar en el resultado de busqueda
+
+* **SOCKET_PATH** = Ubicacion en la cual se encuentra uno de los sockets que utiliza nuestro programa
+
+* **MEMORY_SIZE** = Tamaño de memoria que es utilizado dentro del cache
 
 ## Atribucion
 Durante la creación del proyecto se utilizó el archivo __stop_word.txt__ del repositorio [stop-words (Alir3z4)](https://github.com/Alir3z4/stop-words) que esta bajo la [licencia CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).

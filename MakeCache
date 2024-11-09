@@ -1,0 +1,11 @@
+CC = g++
+CFLAGS = -Wall -std=c++17 -pthread -Iexternal/dotenv-cpp/include -Isrc -Iinclude
+EXEC = cache
+
+all: clean programa
+programa:
+    $(CC) $(CFLAGS) -o $(EXEC) src/clientCache.cpp src/cache.cpp
+
+clean:
+    @echo " [CLN] Removing binary files... chao!!"
+    @rm -f $(EXEC)

@@ -9,5 +9,8 @@ int main(){
     system("make -f MakefileD");
     system("make -f MakefileCore");
     system("make -f MakefileE");
+    system("make -f MakeCache");
+    system("make -f MakeMotor");
+    system("make -f MakeInterface");
     return 0;
 }

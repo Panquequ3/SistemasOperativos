@@ -20,47 +20,118 @@ const string mem_size = "MEMORY_SIZE";
 // Su tarea es ENVIAR SOLICITUDES al servidor y recibir respuestas. 
 // En otras palabras, el cliente solicita un servicio o recurso del servidor.
 
+void handleClient(int client_fd) {
+    sockaddr_un address;
+    char buffer[1048] = {0};
 
-int main(int argc, char* argv[]){
+    // Crear el socket para el servidor final
+    int server_fd = socket(AF_UNIX, SOCK_STREAM, 0);
+    if (server_fd < 0) {
+        cerr << "Error al crear el socket del intermediario para el servidor final" << endl;
+        close(client_fd);
+        return;
+    }
+
+    address.sun_family = AF_UNIX;
+    strncpy(address.sun_path, SERVER_SOCKET_PATH.c_str(), sizeof(address.sun_path) - 1);
+
+    if (connect(server_fd, (struct sockaddr*)&address, sizeof(address)) < 0) {
+        cerr << "Error al conectar con el servidor final" << endl;
+        close(client_fd);
+        close(server_fd);
+        return;
+    }
+
     dotenv::init();
     int memory_size = atoi(dotenv::getenv(mem_size.c_str()));
-    // Crear un socket del cliente
-    int clientSocket = socket(AF_INET, SOCK_STREAM, 0);
-    
-    if (clientSocket == -1) {
-        cerr << "Error al crear el socket del cliente" << endl;
-        return -1;
-    }   
-    // Configurar la dirección del servidor
-    memset(&serverAddr, 0, sizeof(serverAddr));
-    serverAddr.sin_family = AF_UNIX;
-    serverAddr.sin_port = htons(12345); // Puerto del servidor
-    serverAddr.sin_addr.s_addr = inet_addr("127.0.0.1"); // Dirección IP del servidor
+    unordered_map<string, string> cache; // inicializamos el cache
+    queue<string> cacheAux;
 
-    // Conectar al servidor
-    if (connect(clientSocket, (struct sockaddr *)&serverAddr, sizeof(serverAddr)) == -1) {
-        perror("Error al conectar al servidor");
-        close(clientSocket);
-        exit(EXIT_FAILURE);
+    while (running) {
+        memset(buffer, 0, sizeof(buffer));
+        int bytesRead = read(client_fd, buffer, sizeof(buffer) - 1);
+
+        if (bytesRead <= 0) {
+            break;
+        }
+
+        cout << "Intermediario recibió del Cliente: " << buffer << endl;
+
+        string message(buffer);
+
+        if (strcmp(buffer, "SALIR AHORA") == 0) {
+            send(server_fd, buffer, bytesRead, 0);
+            running = false;
+            break;
+        }
+        //aqui se comprueba que si no esta en memoria procesarlo
+        if (searchOnCache(message)==-1) {
+            // Enviar el mensaje al servidor final
+            send(server_fd, buffer, bytesRead, 0);
+
+            // Leer la respuesta del servidor final
+            memset(buffer, 0, sizeof(buffer));
+            bytesRead = read(server_fd, buffer, sizeof(buffer) - 1);
+            if (bytesRead <= 0) {
+                break;
+            }
+
+            cout << "Intermediario recibió del Servidor Final: " << buffer << endl;
+            //aqui debe almacenarlo
+            answer.assign(buffer); 
+            writeCache(cacheAux, cache, answer, message, cacheSize);
+            // Enviar la respuesta del servidor final al cliente
+            send(client_fd, buffer, bytesRead, 0);
+        } else {
+            // Aqui busca la respuesta al mensaje
+            // Enviar una respuesta directa al cliente
+            string respuesta = cache.at(message);
+            send(client_fd, respuesta.c_str(), respuesta.size(), 0);
+        }
     }
 
-    cout << "Conectado al servidor." << endl;
+    close(client_fd);
+    close(server_fd);
+}
 
-    // Crear un nuevo hilo para recibir mensajes del servidor
-    thread(receiveMessages, clientSocket).detach();
+void startIntermediaryServer() {
+    int server_fd, client_fd;
+    sockaddr_un address;
 
-    string example = "hola mundo"; // Ejemplo de busqueda
-    vector<string> cache; // inicializamos el cache
-    // Enviar mensajes al servidor
-    char message[1024];
-    while (cin.getline(message, sizeof(message))) {
-        string request ;
-        // envia datos a través de un socket en una conexion de red
-        send(clientSocket, fullMessage.c_str(), fullMessage.length(), 0);
+    server_fd = socket(AF_UNIX, SOCK_STREAM, 0);
+    if (server_fd < 0) {
+        cerr << "Error al crear el socket del intermediario" << endl;
+        return;
     }
 
-    // Cerrar el socket del cliente
-    close(clientSocket);
+    address.sun_family = AF_UNIX;
+    strncpy(address.sun_path, CLIENT_SOCKET_PATH.c_str(), sizeof(address.sun_path) - 1);
 
+    unlink(CLIENT_SOCKET_PATH.c_str());
+    if (bind(server_fd, (struct sockaddr*)&address, sizeof(address)) < 0) {
+        cerr << "Error en bind" << endl;
+        close(server_fd);
+        return;
+    }
+
+    if (listen(server_fd, 5) < 0) {
+        cerr << "Error en listen" << endl;
+        close(server_fd);
+        return;
+    }
+
+    cout << "Intermediario iniciado en " << CLIENT_SOCKET_PATH << endl;
+
+    // Aceptar conexiones del cliente
+    while (running && (client_fd = accept(server_fd, nullptr, nullptr)) >= 0) {
+        std::thread(handleClient, client_fd).detach();
+    }
+
+    close(server_fd);
+    unlink(CLIENT_SOCKET_PATH.c_str());
+}
+
+int main(int argc, char* argv[]){
+    startIntermediaryServer();
     return 0;
 }

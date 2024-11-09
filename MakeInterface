@@ -1,0 +1,12 @@
+CC=g++
+CFLAGS=-Wall -std=c++17 -Isrc -Iinclude
+BINS=buscador
+
+all: clean programa
+
+programa:
+	$(CC) $(CFLAGS) -o $(BINS) src/buscador.cpp src/motorBusqueda.cpp
+
+clean:
+	@echo " [CLN] Removing binary files... chao!!"
+	@rm -f $(BINS)

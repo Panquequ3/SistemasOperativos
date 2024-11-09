@@ -9,37 +9,6 @@
 
 using namespace std;
 
-void receiveMessages(int clientSocket) {
-    char buffer[1024];
-    ssize_t bytesRead;
-    // obs: ssize_t recv(int sockfd, void *buf, size_t len, int flags);
-
-    // mientras devuelva >0 sisgnifica que se han recibido datos y el
-    // bucle procesara datos
-    while ((bytesRead = recv(clientSocket, buffer, sizeof(buffer), 0)) > 0) {
-        buffer[bytesRead] = '\0';
-        cout << buffer << endl;
-    }
-}
-
-
-// Recibe "la solicitud", y busca en la cache o envia solicitud al motor de busqueda
-// de ser necesario
-// cache <message, answer>, cacheAux[message]
-string cache(queue<string> cacheAux, unordered_map<string, string> cache, string message, int cacheSize){
-    int search = searchOnCache(cache, message);
-    string answer;
-    // Si no la encuentra, se comunica con el motor de busqueda
-    if (search == -1) {  
-        string searchAnswer; // = -respuesta del motor de busqueda-
-        answer = searchAnswer; 
-        writeCache(cacheAux, cache, answer, message, cacheSize);
-    } else{
-        answer = cache.at(message);
-    }
-    return answer;
-}
-
 // Busca la palabra en cache, si la encuentra retorna 1, si no -1
 int searchOnCache(unordered_map<string, string> cache, string message){
     auto result = cache.at(message);

@@ -132,6 +132,43 @@ void handleClient(int client_fd) {
     close(server_fd);
 }
 
+void startIntermediaryServer() {
+    int server_fd, client_fd;
+    sockaddr_un address;
+
+    server_fd = socket(AF_UNIX, SOCK_STREAM, 0);
+    if (server_fd < 0) {
+        cerr << "Error al crear el socket del intermediario" << endl;
+        return;
+    }
+
+    address.sun_family = AF_UNIX;
+    strncpy(address.sun_path, CLIENT_SOCKET_PATH.c_str(), sizeof(address.sun_path) - 1);
+
+    unlink(CLIENT_SOCKET_PATH.c_str());
+    if (bind(server_fd, (struct sockaddr*)&address, sizeof(address)) < 0) {
+        cerr << "Error en bind" << endl;
+        close(server_fd);
+        return;
+    }
+
+    if (listen(server_fd, 5) < 0) {
+        cerr << "Error en listen" << endl;
+        close(server_fd);
+        return;
+    }
+
+    cout << "Intermediario iniciado en " << CLIENT_SOCKET_PATH << endl;
+
+    // Aceptar conexiones del cliente
+    while (running && (client_fd = accept(server_fd, nullptr, nullptr)) >= 0) {
+        std::thread(handleClient, client_fd).detach();
+    }
+
+    close(server_fd);
+    unlink(CLIENT_SOCKET_PATH.c_str());
+}
+
 //solo se ejecuta en main la startIntermediaryServer y era
 --fin intermediario--
 
