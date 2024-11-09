@@ -4,7 +4,11 @@
 #include <arpa/inet.h>
 #include <sys/socket.h>
 #include <thread>
+#include <laserpants/dotenv/dotenv.h>
 using namespace std;
+
+const string mem_size = "MEMORY_SIZE";
+
 
 // El servidor es el programa o proceso que espera las solicitudes de los 
 // clientes. Su función principal es escuchar conexiones entrantes y procesar
@@ -18,7 +22,8 @@ using namespace std;
 
 
 int main(int argc, char* argv[]){
-
+    dotenv::init();
+    int memory_size = atoi(dotenv::getenv(mem_size.c_str()));
     // Crear un socket del cliente
     int clientSocket = socket(AF_INET, SOCK_STREAM, 0);
     
