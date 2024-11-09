@@ -142,8 +142,8 @@ void seleccionMenu(string texto, vector<int> numeros, float numero,string userna
             cout << "Los resultados fueron guardados en " << result_core_path<< endl;
         }
         if(opcion == 11){
-            // string command = "./buscador " ;
-            // system(command.c_str());
+            string command = "./buscador " + map_path;
+            system(command.c_str());
         }
         if(opcion == 12){
             string temp_usr = "",temp_psw,temp_rol;

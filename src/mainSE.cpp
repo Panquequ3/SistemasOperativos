@@ -71,7 +71,7 @@ void startFinalServer() {
         cout << "Servidor final recibió: " << buffer << endl;
 
         // Salir si el mensaje es "SALIR_AHORA"
-        if (strcmp(buffer, "SALIR_AHORA") == 0) {
+        if (strcmp(buffer, "SALIR AHORA") == 0) {
             cout << "Servidor final cerrando conexión" << endl;
             break;
         }

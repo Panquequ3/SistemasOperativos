@@ -6,7 +6,7 @@
 #include <unistd.h>
 #include <cstring>
 #include "motorBusqueda.h"
-#include <laserpants/dotenv/dotenv.h>
+
 
 using namespace std;
 
@@ -147,7 +147,7 @@ vector<string> translate(string answer, string mapPath){
 
 int main(int argc, char* argv[]){
 	if(argc != 2){
-		cout << "Error. Debe ejecutarse como ./busc mapPath" << endl;
+		cout << "Error. Debe ejecutarse como ./buscador mapPath" << endl;
 		exit(EXIT_FAILURE);
 	}
     string map_path = argv[1];
