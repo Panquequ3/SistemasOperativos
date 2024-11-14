@@ -18,7 +18,7 @@ using namespace std;
 
 const string index_p = "INDEX_PATH";
 const string top = "TOPK";
-const int PORT = 8080; // Puerto en el que el servidor escuchará las conexiones
+const int PORT = 8081; // Puerto en el que el servidor escuchará las conexiones
 
 void startFinalServer() {
     int server_fd, client_fd;

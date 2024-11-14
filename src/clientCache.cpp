@@ -13,8 +13,8 @@
 
 using namespace std;
 
-const int INTERMEDIARY_PORT = 9090; // Puerto para el intermediario que los clientes utilizarán
-const int SERVER_PORT = 8080; // Puerto para el servidor final
+const int INTERMEDIARY_PORT = 8080; // Puerto para el intermediario que los clientes utilizarán
+const int SERVER_PORT = 8081; // Puerto para el servidor final
 const string mem_size = "MEMORY_SIZE";
 
 atomic<bool> running(true);

@@ -120,8 +120,20 @@ vector<string> translateA(string answer, string mapPath){
     int score, position = 1;
     string book, id;
     vector<string> searchResults = split(answer);
+
     for(string elem : searchResults){
-        id = extractId(elem).substr(2);
+        if (elem.size() < 2) {
+            cerr << "Error: Elemento inesperado en la respuesta: " << elem << endl;
+            continue;
+        }
+
+        id = extractId(elem);
+        if (id.size() < 2) {
+            cerr << "Error: ID inesperado en el elemento: " << elem << endl;
+            continue;
+        }
+
+        id = id.substr(2); // Asegurarse de que el ID tiene al menos 2 caracteres
         score = extractCant(elem);
         book = searchOnMap(mapPath, id);
         results.push_back(to_string(position) + ") " + "("+ to_string(score) + ") " + book );
